@@ -6,6 +6,7 @@
  */
 
 #include <boost/spirit/home/x3.hpp>
+#include "null_parser.hpp"
 #include "bool_parser.hpp"
 #include "int_parser.hpp"
 #include "long_parser.hpp"
@@ -15,6 +16,14 @@
 #include <ctime>
 
 namespace x3 = boost::spirit::x3;
+
+void test_null()
+{
+	const std::string text("N");
+	hessian::null_t attr;
+	std::cout << x3::parse(text.begin(), text.end(), x3::eps > hessian::parser::null_rule, attr) << std::endl;
+	std::cout << attr << std::endl;
+}
 
 void test_bool()
 {
@@ -55,6 +64,7 @@ int main()
 	{
 		std::cout << std::boolalpha;
 
+		test_null();
 		test_bool();
 		test_int();
 		test_long();
