@@ -4,16 +4,13 @@ project hessian
 	:
 		requirements
 		<cxxflags>-std=c++14
-#		<include>include
+		<include>source
 		<define>BOOST_ALL_DYN_LINK
 	;
 
-#lib network
+#lib hessian
 #	:
 #		[ glob source/*.cpp ]
-#		/site-config//boost_system
-#		/site-config//crypto
-#		/site-config//ssl
 #	;
 
 exe hessian-example
@@ -23,8 +20,8 @@ exe hessian-example
 #		network
 	;
 
-#unit-test network-test
-#	:
-#		[ glob test/*.cpp ]
-#		/site-config//boost_unit_test_framework
-#	;
+unit-test hessian-test
+	:
+		[ glob test/*.cpp ]
+		/site-config//boost_unit_test_framework
+	;
