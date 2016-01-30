@@ -1,5 +1,5 @@
 /*
- * null_test.cpp
+ * test_null.cpp
  *
  *  Created on: 30.01.2016
  *      Author: mike_gresens
@@ -13,9 +13,9 @@ using namespace std::literals;
 namespace hessian {
 namespace parser {
 
-BOOST_AUTO_TEST_SUITE(test_parser_null)
+BOOST_AUTO_TEST_SUITE(test_null)
 
-BOOST_AUTO_TEST_CASE(test_null)
+BOOST_AUTO_TEST_CASE(test_success)
 {
 	const std::string text("N"s);
 	null_t attr;
