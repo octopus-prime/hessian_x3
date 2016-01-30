@@ -35,6 +35,15 @@ BOOST_AUTO_TEST_CASE(test_false)
 	BOOST_CHECK_EQUAL(attr, false);
 }
 
+BOOST_AUTO_TEST_CASE(test_failure)
+{
+	const std::string text("x");
+	bool_t attr;
+	auto iter = text.begin();
+
+	BOOST_CHECK(!x3::parse(iter, text.end(), bool_rule, attr));
+}
+
 BOOST_AUTO_TEST_SUITE_END()
 
 }
