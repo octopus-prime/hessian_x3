@@ -6,6 +6,7 @@
  */
 
 #include <boost/spirit/home/x3.hpp>
+#include <boost/date_time/posix_time/posix_time_io.hpp>
 #include "null_parser.hpp"
 #include "bool_parser.hpp"
 #include "int_parser.hpp"
@@ -15,7 +16,6 @@
 #include "map_parser.hpp"
 #include <iostream>
 #include <iomanip>
-#include <ctime>
 
 namespace x3 = boost::spirit::x3;
 using namespace std::literals;
@@ -57,8 +57,7 @@ void test_date()
 	const std::string text("d\x00\x00\x00\xd0\x4b\x92\x84\xb8"s);
 	hessian::date_t attr;
 	std::cout << x3::parse(text.begin(), text.end(), x3::eps > hessian::parser::date_rule, attr) << std::endl;
-	const std::time_t time = hessian::date_t::clock::to_time_t(attr);
-	std::cout << std::put_time(std::gmtime(&time), "%F %T") << std::endl;
+	std::cout << attr << std::endl;
 }
 
 void test_list()

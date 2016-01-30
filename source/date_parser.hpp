@@ -9,14 +9,15 @@
 
 #include <boost/spirit/home/x3.hpp>
 #include <boost/spirit/home/x3/binary.hpp>
-#include <chrono>
+#include <boost/date_time/posix_time/ptime.hpp>
+#include <boost/date_time/posix_time/posix_time_types.hpp>
 #include "byte_parser.hpp"
 
 namespace x3 = boost::spirit::x3;
 
 namespace hessian {
 
-typedef std::chrono::system_clock::time_point date_t;
+typedef boost::posix_time::ptime date_t;
 
 namespace parser {
 namespace detail {
@@ -25,8 +26,8 @@ namespace detail {
 
 const auto date_action = [](auto& ctx)
 {
-	std::chrono::milliseconds ms(x3::_attr(ctx));
-	x3::_val(ctx) = date_t() + ms;
+	static const date_t EPOCH(boost::gregorian::date(1970, 1, 1));
+	x3::_val(ctx) = EPOCH + boost::posix_time::milliseconds(x3::_attr(ctx));
 };
 
 const x3::rule<class date_rule, date_t> date_rule("date");
