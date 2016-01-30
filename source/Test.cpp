@@ -11,6 +11,7 @@
 #include "int_parser.hpp"
 #include "long_parser.hpp"
 #include "date_parser.hpp"
+#include "list_parser.hpp"
 #include <iostream>
 #include <iomanip>
 #include <ctime>
@@ -58,6 +59,16 @@ void test_date()
 	std::cout << std::put_time(std::gmtime(&time), "%F %T") << std::endl;
 }
 
+void test_list()
+{
+	const std::string text("VTFTFz");
+	hessian::list_t<hessian::bool_t> attr;
+	std::cout << x3::parse(text.begin(), text.end(), x3::eps > hessian::parser::list_rule(hessian::parser::bool_rule), attr) << std::endl;
+	for (const auto element : attr)
+		std::cout << element << ',';
+	std::cout << std::endl;
+}
+
 int main()
 {
 	try
@@ -69,6 +80,7 @@ int main()
 		test_int();
 		test_long();
 		test_date();
+		test_list();
 	}
 	catch (const x3::expectation_failure<std::string::const_iterator>& exception)
 	{
