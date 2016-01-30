@@ -8,6 +8,8 @@
 #include <bool_parser.hpp>
 #include <boost/test/unit_test.hpp>
 
+using namespace std::literals;
+
 namespace hessian {
 namespace parser {
 
@@ -15,7 +17,7 @@ BOOST_AUTO_TEST_SUITE(test_parser_bool)
 
 BOOST_AUTO_TEST_CASE(test_true)
 {
-	const std::string text("T");
+	const std::string text("T"s);
 	bool_t attr;
 	auto iter = text.begin();
 
@@ -26,7 +28,7 @@ BOOST_AUTO_TEST_CASE(test_true)
 
 BOOST_AUTO_TEST_CASE(test_false)
 {
-	const std::string text("F");
+	const std::string text("F"s);
 	bool_t attr;
 	auto iter = text.begin();
 
@@ -37,7 +39,7 @@ BOOST_AUTO_TEST_CASE(test_false)
 
 BOOST_AUTO_TEST_CASE(test_failure)
 {
-	const std::string text("x");
+	const std::string text("x"s);
 	bool_t attr;
 	auto iter = text.begin();
 

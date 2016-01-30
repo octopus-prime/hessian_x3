@@ -18,10 +18,11 @@
 #include <ctime>
 
 namespace x3 = boost::spirit::x3;
+using namespace std::literals;
 
 void test_null()
 {
-	const std::string text("N");
+	const std::string text("N"s);
 	hessian::null_t attr;
 	std::cout << x3::parse(text.begin(), text.end(), x3::eps > hessian::parser::null_rule, attr) << std::endl;
 	std::cout << attr << std::endl;
@@ -29,7 +30,7 @@ void test_null()
 
 void test_bool()
 {
-	const std::string text("T");
+	const std::string text("T"s);
 	hessian::bool_t attr;
 	std::cout << x3::parse(text.begin(), text.end(), x3::eps > hessian::parser::bool_rule, attr) << std::endl;
 	std::cout << attr << std::endl;
@@ -37,7 +38,7 @@ void test_bool()
 
 void test_int()
 {
-	const std::string text("I\x00\x00\x01\x2c", 5);
+	const std::string text("I\x00\x00\x01\x2c"s);
 	hessian::int_t attr;
 	std::cout << x3::parse(text.begin(), text.end(), x3::eps > hessian::parser::int_rule, attr) << std::endl;
 	std::cout << attr << std::endl;
@@ -45,7 +46,7 @@ void test_int()
 
 void test_long()
 {
-	const std::string text("L\x00\x00\x00\x00\x00\x00\x01\x2c", 9);
+	const std::string text("L\x00\x00\x00\x00\x00\x00\x01\x2c"s);
 	hessian::long_t attr;
 	std::cout << x3::parse(text.begin(), text.end(), x3::eps > hessian::parser::long_rule, attr) << std::endl;
 	std::cout << attr << std::endl;
@@ -53,7 +54,7 @@ void test_long()
 
 void test_date()
 {
-	const std::string text("d\x00\x00\x00\xd0\x4b\x92\x84\xb8", 9);
+	const std::string text("d\x00\x00\x00\xd0\x4b\x92\x84\xb8"s);
 	hessian::date_t attr;
 	std::cout << x3::parse(text.begin(), text.end(), x3::eps > hessian::parser::date_rule, attr) << std::endl;
 	const std::time_t time = hessian::date_t::clock::to_time_t(attr);
@@ -62,7 +63,7 @@ void test_date()
 
 void test_list()
 {
-	const std::string text("VTFFTz");
+	const std::string text("VTFFTz"s);
 	hessian::list_t<hessian::bool_t> attr;
 	std::cout << x3::parse(text.begin(), text.end(), x3::eps > hessian::parser::list_rule(hessian::parser::bool_rule), attr) << std::endl;
 	for (const auto element : attr)
@@ -72,7 +73,7 @@ void test_list()
 
 void test_map()
 {
-	const std::string text("MTFFTz");
+	const std::string text("MTFFTz"s);
 	hessian::map_t<hessian::bool_t, hessian::bool_t> attr;
 	std::cout << x3::parse(text.begin(), text.end(), x3::eps > hessian::parser::map_rule(hessian::parser::bool_rule, hessian::parser::bool_rule), attr) << std::endl;
 	for (const auto& element : attr)

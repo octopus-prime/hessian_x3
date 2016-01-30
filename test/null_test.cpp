@@ -8,6 +8,8 @@
 #include <null_parser.hpp>
 #include <boost/test/unit_test.hpp>
 
+using namespace std::literals;
+
 namespace hessian {
 namespace parser {
 
@@ -15,7 +17,7 @@ BOOST_AUTO_TEST_SUITE(test_parser_null)
 
 BOOST_AUTO_TEST_CASE(test_null)
 {
-	const std::string text("N");
+	const std::string text("N"s);
 	null_t attr;
 	auto iter = text.begin();
 
@@ -26,7 +28,7 @@ BOOST_AUTO_TEST_CASE(test_null)
 
 BOOST_AUTO_TEST_CASE(test_failure)
 {
-	const std::string text("x");
+	const std::string text("x"s);
 	null_t attr;
 	auto iter = text.begin();
 
