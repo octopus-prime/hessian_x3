@@ -12,6 +12,7 @@
 #include "int_parser.hpp"
 #include "long_parser.hpp"
 #include "date_parser.hpp"
+#include "string_parser.hpp"
 #include "list_parser.hpp"
 #include "map_parser.hpp"
 #include <iostream>
@@ -60,6 +61,14 @@ void test_date()
 	std::cout << attr << std::endl;
 }
 
+void test_string()
+{
+	const std::string text("S\x00\x05hello"s);
+	hessian::string_t attr;
+	std::cout << x3::parse(text.begin(), text.end(), x3::eps > hessian::parser::string_rule, attr) << std::endl;
+	std::cout << attr << std::endl;
+}
+
 void test_list()
 {
 	const std::string text("VTFFTz"s);
@@ -91,6 +100,7 @@ int main()
 		test_int();
 		test_long();
 		test_date();
+		test_string();
 		test_list();
 		test_map();
 	}
