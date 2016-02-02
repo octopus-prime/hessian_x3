@@ -63,17 +63,10 @@ void test_date()
 
 void test_string()
 {
-	const std::string text("s\x00\x07hello, S\x00\x05world"s);
-	try
-	{
+	const std::string text("s\x00\x07hello, \x05world"s);
 	hessian::string_t attr;
 	std::cout << x3::parse(text.begin(), text.end(), x3::eps > hessian::parser::string_rule, attr) << std::endl;
 	std::cout << attr << std::endl;
-	}
-	catch (const x3::expectation_failure<std::string::const_iterator>& exception)
-	{
-		std::cout << exception.what() << " " << exception.which() << " " << std::string(exception.where(), text.end()) << std::endl;
-	}
 }
 
 void test_list()

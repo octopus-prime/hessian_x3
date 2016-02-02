@@ -11,6 +11,7 @@
 #include <boost/spirit/home/x3/binary.hpp>
 #include <boost/fusion/adapted/std_tuple.hpp>
 #include <string>
+#include "byte_parser.hpp"
 
 namespace x3 = boost::spirit::x3;
 
@@ -27,48 +28,36 @@ namespace detail {
 
 // NOTE: The length means number of UTF16 characters but the content is given in UTF8 characters!
 
-struct bstring : x3::parser<bstring>
+struct string_parser : x3::parser<string_parser>
 {
     using attribute_type = hessian::string_t;
 
     template <typename It>
     using u8_u16_iterator = boost::u32_to_u16_iterator<boost::u8_to_u32_iterator<It>>;
 
-    template <typename It>
-    using u16_u8_iterator = boost::u32_to_u8_iterator<boost::u16_to_u32_iterator<It>>;
-
     template <typename It, typename Ctx, typename Attr>
 	bool parse(It& f, It const& l, Ctx&, x3::unused_type, Attr& attr) const
     {
-		auto saved = f;
-		char type;
+		const auto saved = f;
+		char type = 'S';
 		size_t len;
 		auto tied = std::tie(type, len);
 
-		const u8_u16_iterator<It> e(l);
-		while (x3::parse(f,l,x3::char_("sS") >> x3::big_word,tied))
+//		const u8_u16_iterator<It> e(l);
+		while (x3::parse(f,l,x3::char_("sS") >> x3::big_word,tied) || x3::parse(f,l,byte_rule(0x00, 0x1f), len))
 		{
-//			if (!x3::parse(f,l,x3::repeat(len)[x3::char_],attr))
-//				break;
-			u8_u16_iterator<It> b(f);
-			std::u16string temp;
-			while (temp.size() != len)
-			{
-				if (f == l)
-					return false;
-				if (b == e)
-					return false;
-				temp.push_back(*b++);
-				f = b.base().base();
-			}
-			std::copy
-			(
-				u16_u8_iterator<std::u16string::const_iterator>(temp.cbegin()),
-				u16_u8_iterator<std::u16string::const_iterator>(temp.cend()),
-				std::back_inserter(attr)
-			);
+			u8_u16_iterator<It> i(f);
+			std::advance(i, len);
+
+			const auto s = f;
+			f = i.base().base();
+
+			attr.insert(attr.cend(), s, f);
+
 			if (type == 'S')
 				return true;
+
+			type = 'S';
 		}
 
 		f = saved;
@@ -76,7 +65,7 @@ struct bstring : x3::parser<bstring>
 	}
 };
 
-std::string what(bstring const& p)
+std::string what(string_parser const& p)
 {
     return "string";
 }
@@ -118,7 +107,7 @@ BOOST_SPIRIT_DEFINE(string_rule, string1_rule, string2_rule);
 //const auto string_rule_def = bstring();
 //BOOST_SPIRIT_DEFINE(string_rule);
 
-const auto string_rule = bstring();
+const auto string_rule = string_parser();
 
 }
 

@@ -26,14 +26,12 @@ namespace parser {
 
 const samples_t<string_t> samples
 {
-//	{"\x00"s, ""s},
-//	{"\x05hello"s, "hello"s},
-//	{"\x01\xc3\x83"s, "\u00c3"s},
+	{"\x00"s, ""s},
+	{"\x05hello"s, "hello"s},
+	{"\x01\xc3\x83"s, "\u00c3"s},
 
 	{"S\x00\x05hello"s, "hello"s},
-	{"s\x00\x07hello, S\x00\x05world"s, "hello, world"s},
-
-	{"S\x00\x01\xc3\x83"s, "\u00c3"s}
+	{"s\x00\x07hello, \x05world"s, "hello, world"s},
 };
 
 BOOST_AUTO_TEST_SUITE(test_string)
