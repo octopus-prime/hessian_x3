@@ -9,9 +9,8 @@
 
 #include <boost/spirit/home/x3.hpp>
 #include <boost/spirit/home/x3/binary.hpp>
+#include <boost/fusion/adapted/std_tuple.hpp>
 #include <string>
-#include <memory>
-#include "byte_parser.hpp"
 
 namespace x3 = boost::spirit::x3;
 
@@ -28,6 +27,61 @@ namespace detail {
 
 // NOTE: The length means number of UTF16 characters but the content is given in UTF8 characters!
 
+struct bstring : x3::parser<bstring>
+{
+    using attribute_type = hessian::string_t;
+
+    template <typename It>
+    using u8_u16_iterator = boost::u32_to_u16_iterator<boost::u8_to_u32_iterator<It>>;
+
+    template <typename It>
+    using u16_u8_iterator = boost::u32_to_u8_iterator<boost::u16_to_u32_iterator<It>>;
+
+    template <typename It, typename Ctx, typename Attr>
+	bool parse(It& f, It const& l, Ctx&, x3::unused_type, Attr& attr) const
+    {
+		auto saved = f;
+		char type;
+		size_t len;
+		auto tied = std::tie(type, len);
+
+		const u8_u16_iterator<It> e(l);
+		while (x3::parse(f,l,x3::char_("sS") >> x3::big_word,tied))
+		{
+//			if (!x3::parse(f,l,x3::repeat(len)[x3::char_],attr))
+//				break;
+			u8_u16_iterator<It> b(f);
+			std::u16string temp;
+			while (temp.size() != len)
+			{
+				if (f == l)
+					return false;
+				if (b == e)
+					return false;
+				temp.push_back(*b++);
+				f = b.base().base();
+			}
+			std::copy
+			(
+				u16_u8_iterator<std::u16string::const_iterator>(temp.cbegin()),
+				u16_u8_iterator<std::u16string::const_iterator>(temp.cend()),
+				std::back_inserter(attr)
+			);
+			if (type == 'S')
+				return true;
+		}
+
+		f = saved;
+		return false;
+	}
+};
+
+std::string what(bstring const& p)
+{
+    return "string";
+}
+
+/*
 struct length_tag;
 const auto length_action = [](auto& ctx)
 {
@@ -50,11 +104,21 @@ const x3::rule<class string_rule, string_t> string_rule("string");
 const x3::rule<class string1_rule, string_t> string1_rule;
 const x3::rule<class string2_rule, string_t> string2_rule;
 
-const auto string_rule_def = x3::with<length_tag>(std::make_shared<std::size_t>())[string1_rule];
-const auto string1_rule_def = x3::lit('S') >> x3::omit[x3::big_word [length_action] ] >> x3::lexeme[ *(x3::eps [more_action] >> x3::char_ [push_action]) >> x3::eps [done_action] ];
-const auto string2_rule_def = x3::lit('s') >> x3::omit[x3::big_word [length_action] ] >> x3::lexeme[ *(x3::eps [more_action] >> x3::char_ [push_action]) >> x3::eps [done_action] ] >> string_rule;
+const auto length_rule = x3::omit[x3::big_word [length_action] ];
+const auto content_rule = x3::lexeme[ *(x3::eps [more_action] >> x3::char_ [push_action]) >> x3::eps [done_action] ];
+
+const auto string_rule_def = x3::with<length_tag>(std::make_shared<std::size_t>())[string1_rule | string2_rule];
+const auto string1_rule_def = x3::lit('S') >> length_rule >> content_rule;
+const auto string2_rule_def = x3::lit('s') >> length_rule >> content_rule >> string_rule;
 
 BOOST_SPIRIT_DEFINE(string_rule, string1_rule, string2_rule);
+*/
+
+//const x3::rule<class string_rule, string_t> string_rule("string");
+//const auto string_rule_def = bstring();
+//BOOST_SPIRIT_DEFINE(string_rule);
+
+const auto string_rule = bstring();
 
 }
 
