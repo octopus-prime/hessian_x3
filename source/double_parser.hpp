@@ -27,23 +27,54 @@ namespace detail {
 //       ::= x6a b1 b0
 //       ::= x6b b3 b2 b1 b0
 
+const auto double4_action = [](auto& ctx)
+{
+	x3::_val(ctx) = static_cast<std::int16_t>(x3::_attr(ctx));
+};
+
+const auto double5_action = [](auto& ctx)
+{
+	union
+	{
+		std::uint32_t in;
+		float out;
+	} conversion;
+
+	conversion.in = x3::_attr(ctx);
+	x3::_val(ctx) = conversion.out;
+};
+
+const auto double6_action = [](auto& ctx)
+{
+	union
+	{
+		std::uint64_t in;
+		double out;
+	} conversion;
+
+	conversion.in = x3::_attr(ctx);
+	x3::_val(ctx) = conversion.out;
+};
+
 const x3::rule<class double_rule, double_t> double_rule("double");
 const x3::rule<class double1_rule, double_t> double1_rule;
 const x3::rule<class double2_rule, double_t> double2_rule;
-//const x3::rule<class double3_rule, double_t> double3_rule;
-//const x3::rule<class double4_rule, double_t> double4_rule;
-//const x3::rule<class double5_rule, double_t> double5_rule;
-//const x3::rule<class double6_rule, double_t> double6_rule;
+const x3::rule<class double3_rule, double_t> double3_rule;
+const x3::rule<class double4_rule, double_t> double4_rule;
+const x3::rule<class double5_rule, double_t> double5_rule;
+const x3::rule<class double6_rule, double_t> double6_rule;
 
-const auto double_rule_def = double1_rule | double2_rule; // | double3_rule | double4_rule | double5_rule | double6_rule;
+const auto double_rule_def = double1_rule | double2_rule | double3_rule | double4_rule | double5_rule | double6_rule;
 const auto double1_rule_def = x3::lit('\x67') >> x3::attr(0.0);
 const auto double2_rule_def = x3::lit('\x68') >> x3::attr(1.0);
-//const auto double3_rule_def = x3::lit('\x69') >> x3::byte_;
-//const auto double4_rule_def = x3::lit('\x6a') >> x3::big_word;
+const auto double3_rule_def = x3::lit('\x69') >> x3::char_;
+const auto double4_rule_def = x3::lit('\x6a') >> x3::big_word [double4_action];
 //const auto double5_rule_def = x3::lit('\x6b') >> x3::big_bin_float;
+const auto double5_rule_def = x3::lit('\x6b') >> x3::big_dword [double5_action];
 //const auto double6_rule_def = x3::lit('D') >> x3::big_bin_double;
+const auto double6_rule_def = x3::lit('D') >> x3::big_qword [double6_action];
 
-BOOST_SPIRIT_DEFINE(double_rule, double1_rule, double2_rule); //, double3_rule, double4_rule, double5_rule, double6_rule);
+BOOST_SPIRIT_DEFINE(double_rule, double1_rule, double2_rule, double3_rule, double4_rule, double5_rule, double6_rule);
 
 }
 

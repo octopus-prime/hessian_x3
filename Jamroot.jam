@@ -8,16 +8,9 @@ project hessian
 		<define>BOOST_ALL_DYN_LINK
 	;
 
-#lib hessian
-#	:
-#		[ glob source/*.cpp ]
-#	;
-
 exe hessian-example
 	:
 		[ glob source/*.cpp ]
-#		[ glob example/*.cpp ]
-#		network
 	;
 
 unit-test hessian-test
