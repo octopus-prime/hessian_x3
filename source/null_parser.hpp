@@ -19,8 +19,6 @@ typedef boost::blank null_t;
 namespace parser {
 namespace detail {
 
-//null ::= N
-
 const x3::rule<class null_rule, null_t> null_rule("null");
 
 const auto null_rule_def = x3::lit('N') >> x3::attr(null_t());

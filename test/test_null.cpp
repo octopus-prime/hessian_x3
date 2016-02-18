@@ -30,9 +30,8 @@ BOOST_AUTO_TEST_CASE(test_failure)
 {
 	const std::string text("x"s);
 	null_t attr;
-	auto iter = text.begin();
 
-	BOOST_CHECK(!x3::parse(iter, text.end(), null_rule, attr));
+	BOOST_CHECK(!x3::parse(text.begin(), text.end(), null_rule, attr));
 }
 
 BOOST_AUTO_TEST_SUITE_END()
