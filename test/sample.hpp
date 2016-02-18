@@ -7,6 +7,10 @@
 
 #pragma once
 
+#include <boost/algorithm/hex.hpp>
+
+using namespace std::literals;
+
 template <typename T>
 using sample_t = std::pair<std::string, T>;
 
@@ -19,7 +23,7 @@ template <typename T>
 inline ostream&
 operator<<(ostream& stream, const sample_t<T>& sample)
 {
-	stream << sample.first << " & " << sample.second;
+	stream << boost::algorithm::hex(sample.first) << " & " << sample.second;
 	return stream;
 }
 
