@@ -29,7 +29,6 @@ const x3::rule<class long4_rule, std::int32_t> long4_rule;
 const x3::rule<class long5_rule, long_t> long5_rule;
 
 const auto long_rule_def = long1_rule | long2_rule | long3_rule | long4_rule | long5_rule;
-
 const auto long1_rule_def = byte_rule(0xd8, 0xef) [ calc_action<long_t,0>(0xe0) ];
 const auto long2_rule_def = (byte_rule(0xf0, 0xff) >> x3::byte_) [ calc_action<long_t,8>(0xf8) ];
 const auto long3_rule_def = (byte_rule(0x38, 0x3f) >> x3::big_word) [ calc_action<long_t,16>(0x3c) ];
