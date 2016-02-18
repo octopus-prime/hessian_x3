@@ -18,11 +18,6 @@ typedef bool bool_t;
 namespace parser {
 namespace detail {
 
-//boolean ::= T
-//        ::= F
-
-// x3::symbols<bool> const bool_rule({{"T", true}, {"F", false}}, "bool");
-
 const x3::rule<class bool_rule, bool_t> bool_rule("bool");
 const x3::rule<class true_rule, bool_t> true_rule;
 const x3::rule<class false_rule, bool_t> false_rule;

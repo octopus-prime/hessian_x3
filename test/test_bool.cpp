@@ -10,13 +10,8 @@
 #include <boost/test/data/test_case.hpp>
 #include "sample.hpp"
 
-using namespace std::literals;
-
 namespace hessian {
 namespace parser {
-
-//T   # true
-//F   # false
 
 const samples_t<bool_t> samples
 {
@@ -41,9 +36,8 @@ BOOST_AUTO_TEST_CASE(test_failure)
 {
 	const std::string text("x"s);
 	bool_t attr;
-	auto iter = text.begin();
 
-	BOOST_CHECK(!x3::parse(iter, text.end(), bool_rule, attr));
+	BOOST_CHECK(!x3::parse(text.begin(), text.end(), bool_rule, attr));
 }
 
 BOOST_AUTO_TEST_SUITE_END()
