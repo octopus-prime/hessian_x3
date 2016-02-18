@@ -10,44 +10,27 @@
 #include <boost/test/data/test_case.hpp>
 #include "sample.hpp"
 
-using namespace std::literals;
-
 namespace hessian {
 namespace parser {
-
-//		x90                # 0
-//		x80                # -16
-//		xbf                # 47
-//
-//		xc8 x00            # 0
-//		xc0 x00            # -2048
-//		xc7 x00            # -256
-//		xcf xff            # 2047
-//
-//		xd4 x00 x00        # 0
-//		xd0 x00 x00        # -262144
-//		xd7 xff xff        # 262143
-//
-//		I x00 x00 x00 x00  # 0
-//		I x00 x00 x01 x2c  # 300
 
 const samples_t<int_t> samples
 {
 	{"\x90"s, 0},
-	{"\x80"s, -16},
+	{"\x91"s, 1},
 	{"\xbf"s, 47},
-
-	{"\xc8\x00"s, 0},
-	{"\xc0\x00"s, -2048},
-	{"\xc7\x00"s, -256},
-	{"\xcf\xff"s, 2047},
-
-	{"\xd4\x00\x00"s, 0},
-	{"\xd0\x00\x00"s, -262144},
-	{"\xd7\xff\xff"s, 262143},
-
-	{"I\x00\x00\x00\x00"s, 0},
-	{"I\x00\x00\x01\x2c"s, 300}
+	{"\x80"s, -16},
+	{"\xc8\x30"s, 0x30},
+	{"\xcf\xff"s, 0x7ff},
+	{"\xc7\xef"s, -17},
+	{"\xc0\x00"s, -0x800},
+	{"\xd4\x08\x00"s, 0x800},
+	{"\xd7\xff\xff"s, 0x3ffff},
+	{"\xd3\xf7\xff"s, -0x801},
+	{"\xd0\x00\x00"s, -0x40000},
+	{"I\x00\x04\x00\x00"s, 0x40000},
+	{"I\x7f\xff\xff\xff"s, 0x7fffffff},
+	{"I\xff\xfb\xff\xff"s, -0x40001},
+	{"I\x80\x00\x00\x00"s, -0x80000000}
 };
 
 BOOST_AUTO_TEST_SUITE(test_int)
@@ -67,9 +50,8 @@ BOOST_AUTO_TEST_CASE(test_failure)
 {
 	const std::string text("x");
 	int_t attr;
-	auto iter = text.begin();
 
-	BOOST_CHECK(!x3::parse(iter, text.end(), int_rule, attr));
+	BOOST_CHECK(!x3::parse(text.begin(), text.end(), int_rule, attr));
 }
 
 BOOST_AUTO_TEST_SUITE_END()
