@@ -25,7 +25,8 @@ namespace detail {
 template <typename Duration>
 struct date_action
 {
-	void operator()(auto& ctx) const
+	template <typename C>
+	void operator()(C& ctx) const
 	{
 		static const date_t EPOCH(boost::gregorian::date(1970, 1, 1));
 		x3::_val(ctx) = EPOCH + Duration(x3::_attr(ctx));

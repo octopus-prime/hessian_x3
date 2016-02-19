@@ -37,7 +37,8 @@ class calc_action
 public:
 	calc_action(const T offset) : _offset(offset) {}
 
-	void operator()(auto& ctx) const
+	template <typename C>
+	void operator()(C& ctx) const
 	{
 		using boost::fusion::at_c;
 		const T b1 = at_c<0>(x3::_attr(ctx));
@@ -55,7 +56,8 @@ struct calc_action<T, 0>
 public:
 	calc_action(const T offset) : _offset(offset) {}
 
-	void operator()(auto& ctx) const
+	template <typename C>
+	void operator()(C& ctx) const
 	{
 		const T b0 = x3::_attr(ctx);
 		x3::_val(ctx) = b0 - _offset;
