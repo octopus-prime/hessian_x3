@@ -18,6 +18,8 @@ namespace parser {
 
 // NOTE: The length means number of UTF16 characters but the content is given in UTF8 characters!
 
+const x3::rule<class string_rule, string_t> string_rule("string");
+
 struct string_parser : x3::parser<string_parser>
 {
     using attribute_type = hessian::string_t;
@@ -54,12 +56,40 @@ struct string_parser : x3::parser<string_parser>
 		f = saved;
 		return false;
 	}
+
+    template <typename It, typename Ctx>
+	bool parse(It& f, It const& l, Ctx&, x3::unused_type, x3::unused_type) const
+    {
+		const auto saved = f;
+		char type = 'S';
+		size_t len;
+		auto tied = std::tie(type, len);
+
+//		const u8_u16_iterator<It> e(l);
+		while (x3::parse(f,l,x3::char_("sS") >> x3::big_word,tied) || x3::parse(f,l,byte_rule(0x00, 0x1f), len))
+		{
+			u8_u16_iterator<It> i(f);
+			// std::advance(i, len); // broken
+			std::__advance(i, len, std::input_iterator_tag());
+
+			const auto s = f;
+			f = i.base().base();
+
+			if (type == 'S')
+				return true;
+
+			type = 'S';
+		}
+
+		f = saved;
+		return false;
+	}
 };
 
-std::string what(string_parser const& p)
-{
-    return "string";
-}
+//std::string what(string_parser const& p)
+//{
+//    return "string";
+//}
 
 /*
 struct length_tag;
@@ -98,7 +128,9 @@ BOOST_SPIRIT_DEFINE(string_rule, string1_rule, string2_rule);
 //const auto string_rule_def = bstring();
 //BOOST_SPIRIT_DEFINE(string_rule);
 
-const auto string_rule = string_parser();
+const auto string_rule_def = string_parser();
+
+BOOST_SPIRIT_DEFINE(string_rule);
 
 }
 }
