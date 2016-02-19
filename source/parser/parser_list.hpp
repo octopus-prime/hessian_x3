@@ -13,7 +13,7 @@ namespace parser {
 const x3::rule<class list_rule, list_t> list_rule("list");
 const x3::rule<class list1_rule, list_t> list1_rule;
 const x3::rule<class list2_rule, list_t> list2_rule;
-const x3::rule<class length_rule, size_t> length_rule("length");
+const x3::rule<class length_rule, size_t> length_rule;
 const x3::rule<class length1_rule, size_t> length1_rule;
 const x3::rule<class length2_rule, size_t> length2_rule;
 const x3::rule<class length3_rule, size_t> length3_rule;
