@@ -24,7 +24,7 @@ template <typename T>
 inline ostream&
 operator<<(ostream& stream, const sample_t<T>& sample)
 {
-	stream << boost::algorithm::hex(sample.first) << " & " << sample.second;
+	stream << boost::algorithm::hex(sample.first) << " & " << hessian::value_t(sample.second);
 	return stream;
 }
 
