@@ -1,20 +1,30 @@
+import os ;
+
+using clang : : [ os.environ CXX ] ;
 using testing ;
 
 project hessian
 	:
 		requirements
 		<cxxflags>-std=c++14
+		<include>include
 		<include>source
 		<define>BOOST_ALL_DYN_LINK
 	;
 
-exe hessian-example
+lib hessian
 	:
 		[ glob source/*.cpp ]
 	;
 
+#exe hessian-example
+#	:
+#		[ glob example/Test.cpp ]
+#	;
+
 unit-test hessian-test
 	:
 		[ glob test/*.cpp ]
+		hessian
 		/site-config//boost_unit_test_framework
 	;

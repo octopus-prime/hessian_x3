@@ -13,14 +13,23 @@
 #include "long_parser.hpp"
 #include "date_parser.hpp"
 #include "string_parser.hpp"
-#include "list_parser.hpp"
+//#include "list_parser.hpp"
 #include "map_parser.hpp"
+#include "value_parser.hpp"
 #include <iostream>
 #include <iomanip>
 
 namespace x3 = boost::spirit::x3;
 using namespace std::literals;
 
+void test_value()
+{
+	const std::string text("WL\x00\x00\x00\x00\x00\x00\x01\x2cNTFZ"s);
+	hessian::value_t attr;
+	std::cout << x3::parse(text.begin(), text.end(), x3::eps > hessian::parser::value_rule, attr) << std::endl;
+	std::cout << attr << std::endl;
+}
+/*
 void test_null()
 {
 	const std::string text("N"s);
@@ -88,21 +97,22 @@ void test_map()
 		std::cout << element.first << "=" << element.second << ',';
 	std::cout << std::endl;
 }
-
+*/
 int main()
 {
 	try
 	{
 		std::cout << std::boolalpha;
 
-		test_null();
-		test_bool();
-		test_int();
-		test_long();
-		test_date();
-		test_string();
-		test_list();
-		test_map();
+		test_value();
+//		test_null();
+//		test_bool();
+//		test_int();
+//		test_long();
+//		test_date();
+//		test_string();
+//		test_list();
+//		test_map();
 	}
 	catch (const x3::expectation_failure<std::string::const_iterator>& exception)
 	{

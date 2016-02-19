@@ -8,6 +8,7 @@
 #pragma once
 
 #include <boost/algorithm/hex.hpp>
+#include <sstream>
 
 using namespace std::literals;
 

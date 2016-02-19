@@ -9,14 +9,14 @@
 
 #include <boost/spirit/home/x3.hpp>
 #include <boost/fusion/include/std_pair.hpp>
-#include <unordered_map>
+#include <map>
 
 namespace x3 = boost::spirit::x3;
 
 namespace hessian {
 
 template <typename K, typename V>
-using map_t = std::unordered_map<K, V>;
+using map_t = std::map<K, V>;
 
 namespace parser {
 namespace detail {

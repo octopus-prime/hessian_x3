@@ -5,7 +5,7 @@
  *      Author: mike_gresens
  */
 
-#include <bool_parser.hpp>
+#include <hessian/parser.hpp>
 #include <boost/test/unit_test.hpp>
 #include <boost/test/data/test_case.hpp>
 #include "sample.hpp"
@@ -21,23 +21,13 @@ const samples_t<bool_t> samples
 
 BOOST_AUTO_TEST_SUITE(test_bool)
 
-BOOST_DATA_TEST_CASE(test_success, samples, sample)
+BOOST_DATA_TEST_CASE(test, samples, sample)
 {
-	const std::string& text = sample.first;
-	bool_t attr;
-	auto iter = text.begin();
+	std::istringstream stream(sample.first);
+	value_t value;
 
-	BOOST_REQUIRE(x3::parse(iter, text.end(), bool_rule, attr));
-	BOOST_REQUIRE(iter == text.end());
-	BOOST_CHECK_EQUAL(attr, sample.second);
-}
-
-BOOST_AUTO_TEST_CASE(test_failure)
-{
-	const std::string text("x"s);
-	bool_t attr;
-
-	BOOST_CHECK(!x3::parse(text.begin(), text.end(), bool_rule, attr));
+	BOOST_REQUIRE_NO_THROW(value = parse(stream));
+	BOOST_CHECK_EQUAL(value, value_t(sample.second));
 }
 
 BOOST_AUTO_TEST_SUITE_END()

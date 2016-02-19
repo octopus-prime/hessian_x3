@@ -5,33 +5,28 @@
  *      Author: mike_gresens
  */
 
-#include <null_parser.hpp>
+#include <hessian/parser.hpp>
 #include <boost/test/unit_test.hpp>
-
-using namespace std::literals;
+#include <boost/test/data/test_case.hpp>
+#include "sample.hpp"
 
 namespace hessian {
 namespace parser {
 
+const samples_t<null_t> samples
+{
+	{"N"s, null_t()}
+};
+
 BOOST_AUTO_TEST_SUITE(test_null)
 
-BOOST_AUTO_TEST_CASE(test_success)
+BOOST_DATA_TEST_CASE(test, samples, sample)
 {
-	const std::string text("N"s);
-	null_t attr;
-	auto iter = text.begin();
+	std::istringstream stream(sample.first);
+	value_t value;
 
-	BOOST_REQUIRE(x3::parse(iter, text.end(), null_rule, attr));
-	BOOST_REQUIRE(iter == text.end());
-	BOOST_CHECK_EQUAL(attr, null_t());
-}
-
-BOOST_AUTO_TEST_CASE(test_failure)
-{
-	const std::string text("x"s);
-	null_t attr;
-
-	BOOST_CHECK(!x3::parse(text.begin(), text.end(), null_rule, attr));
+	BOOST_REQUIRE_NO_THROW(value = parse(stream));
+	BOOST_CHECK_EQUAL(value, value_t(sample.second));
 }
 
 BOOST_AUTO_TEST_SUITE_END()
