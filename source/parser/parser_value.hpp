@@ -27,6 +27,7 @@ const x3::rule<class value_rule, value_t> value_rule("value");
 #include "parser_double.hpp"
 #include "parser_date.hpp"
 #include "parser_string.hpp"
+#include "parser_type.hpp"
 #include "parser_list.hpp"
 
 namespace hessian {
