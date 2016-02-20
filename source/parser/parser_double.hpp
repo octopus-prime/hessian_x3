@@ -9,6 +9,7 @@
 
 namespace hessian {
 namespace parser {
+namespace double_ {
 
 const auto double5_action = [](auto& ctx)
 {
@@ -37,6 +38,10 @@ const auto double5_rule_def = x3::lit('\x5f') >> x3::big_dword [ double5_action 
 const auto double6_rule_def = x3::lit('D') >> x3::big_qword [ double6_action ]; // TODO: Replace by big_bin_double
 
 BOOST_SPIRIT_DEFINE(double_rule, double1_rule, double2_rule, double3_rule, double4_rule, double5_rule, double6_rule);
+
+}
+
+using double_::double_rule;
 
 }
 }

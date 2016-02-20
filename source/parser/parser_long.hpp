@@ -9,6 +9,7 @@
 
 namespace hessian {
 namespace parser {
+namespace long_ {
 
 const x3::rule<class long_rule, long_t> long_rule("long");
 const x3::rule<class long1_rule, long_t> long1_rule;
@@ -25,6 +26,10 @@ const auto long4_rule_def = x3::lit('Y') >> x3::big_dword;
 const auto long5_rule_def = x3::lit('L') >> x3::big_qword;
 
 BOOST_SPIRIT_DEFINE(long_rule, long1_rule, long2_rule, long3_rule, long4_rule, long5_rule);
+
+}
+
+using long_::long_rule;
 
 }
 }

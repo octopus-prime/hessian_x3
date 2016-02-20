@@ -9,6 +9,7 @@
 
 namespace hessian {
 namespace parser {
+namespace list {
 
 const x3::rule<class list_rule, list_t> list_rule("list");
 const x3::rule<class list1_rule, list_t> list1_rule;
@@ -21,7 +22,7 @@ const x3::rule<class length4_rule, size_t> length4_rule;
 
 struct list_parser : x3::parser<list_parser>
 {
-    using attribute_type = hessian::list_t;
+	using attribute_type = hessian::list_t;
 
     template <typename It, typename Ctx, typename Attr>
 	bool parse(It& f, It const& l, Ctx&, x3::unused_type, Attr& attr) const
@@ -48,6 +49,10 @@ const auto length3_rule_def = (byte_rule(0x70, 0x77) >> type_rule) [ calc_action
 const auto length4_rule_def = x3::lit('V') >> type_rule >> int_rule;
 
 BOOST_SPIRIT_DEFINE(list_rule, list1_rule, list2_rule, length_rule, length1_rule, length2_rule, length3_rule, length4_rule);
+
+}
+
+using list::list_rule;
 
 }
 }

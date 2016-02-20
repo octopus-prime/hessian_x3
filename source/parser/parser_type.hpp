@@ -9,12 +9,17 @@
 
 namespace hessian {
 namespace parser {
+namespace type {
 
 const x3::rule<class type_rule> type_rule;
 
 const auto type_rule_def = x3::omit [ int_rule | string_rule ];
 
 BOOST_SPIRIT_DEFINE(type_rule);
+
+}
+
+using type::type_rule;
 
 }
 }

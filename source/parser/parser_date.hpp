@@ -11,6 +11,7 @@
 
 namespace hessian {
 namespace parser {
+namespace date {
 
 static const date_t EPOCH(boost::gregorian::date(1970, 1, 1));
 
@@ -33,6 +34,10 @@ const auto date1_rule_def = x3::lit('J') >> x3::big_qword [date_action<boost::po
 const auto date2_rule_def = x3::lit('K') >> x3::big_dword [date_action<boost::posix_time::minutes>()];
 
 BOOST_SPIRIT_DEFINE(date_rule, date1_rule, date2_rule);
+
+}
+
+using date::date_rule;
 
 }
 }
