@@ -24,33 +24,33 @@ struct string_parser : x3::parser<string_parser>
 {
     using attribute_type = hessian::string_t;
 
-    template <typename It>
-    using u8_u16_iterator = boost::u32_to_u16_iterator<boost::u8_to_u32_iterator<It>>;
+    template <typename Iterator>
+    using u8_u16_iterator = boost::u32_to_u16_iterator<boost::u8_to_u32_iterator<Iterator>>;
 
-    template <typename It, typename Ctx, typename Attr>
-	bool parse(It& f, It const& l, Ctx&, x3::unused_type, Attr& attr) const
+    template <typename Iterator, typename Context, typename RContext, typename Attribute>
+    bool parse(Iterator& first, const Iterator& last, const Context& context, RContext& rcontext, Attribute& attr) const
     {
-		const auto saved = f;
-		size_t len;
+		const auto saved = first;
+		size_t length;
 		bool done;
-		auto tied = std::tie(len, done);
+		auto tied = std::tie(length, done);
 
-		while (x3::parse(f,l,length_rule,tied))
+		while (length_rule.parse(first, last, context, rcontext, tied))
 		{
 			// NOTE: The length means number of UTF16 characters but the content is given in UTF8 characters!
-			u8_u16_iterator<It> i(f);
-			std::__advance(i, len, std::input_iterator_tag()); //NOTE: std::advance(i, len); broken here
+			u8_u16_iterator<Iterator> iterator(first);
+			std::__advance(iterator, length, std::input_iterator_tag()); //NOTE: std::advance(iterator, length); broken here
 
-			const auto s = f;
-			f = i.base().base();
+			const auto saved = first;
+			first = iterator.base().base();
 
-			x3::traits::append(attr, s, f);
+			x3::traits::append(attr, saved, first);
 
 			if (done)
 				return true;
 		}
 
-		f = saved;
+		first = saved;
 		return false;
 	}
 };

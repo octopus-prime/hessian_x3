@@ -24,17 +24,20 @@ struct list_parser : x3::parser<list_parser>
 {
 	using attribute_type = hessian::list_t;
 
-    template <typename It, typename Ctx, typename Attr>
-	bool parse(It& f, It const& l, Ctx&, x3::unused_type, Attr& attr) const
+    template <typename Iterator, typename Context, typename RContext, typename Attribute>
+    bool parse(Iterator& first, const Iterator& last, const Context& context, RContext& rcontext, Attribute& attr) const
     {
-		const auto saved = f;
-		size_t len;
+		const auto saved = first;
+		size_t length;
 
-		if (x3::parse(f, l, length_rule, len))
-			if (x3::parse(f, l, x3::repeat(len) [value_rule], attr))
+		if (length_rule.parse(first, last, context, rcontext, length))
+		{
+			const auto rule = x3::repeat(length) [value_rule];
+			if (rule.parse(first, last, context, rcontext, attr))
 				return true;
+		}
 
-		f = saved;
+		first = saved;
 		return false;
 	}
 };

@@ -24,24 +24,25 @@ struct binary_parser : x3::parser<binary_parser>
 {
     using attribute_type = hessian::binary_t;
 
-    template <typename It, typename Ctx, typename Attr>
-	bool parse(It& f, It const& l, Ctx&, x3::unused_type, Attr& attr) const
+    template <typename Iterator, typename Context, typename RContext, typename Attribute>
+    bool parse(Iterator& first, const Iterator& last, const Context& context, RContext& rcontext, Attribute& attr) const
     {
-		const auto saved = f;
-		size_t len;
+		const auto saved = first;
+		size_t length;
 		bool done;
-		auto tied = std::tie(len, done);
+		auto tied = std::tie(length, done);
 
-		while (x3::parse(f,l,length_rule,tied))
+		while (length_rule.parse(first, last, context, rcontext, tied))
 		{
-			if (!x3::parse(f, l, x3::repeat(len) [x3::byte_], attr))
+			const auto rule = x3::repeat(length) [x3::byte_];
+			if (!rule.parse(first, last, context, rcontext, attr))
 				break;
 
 			if (done)
 				return true;
 		}
 
-		f = saved;
+		first = saved;
 		return false;
 	}
 };
