@@ -17,9 +17,11 @@ parse(std::istream& stream)
 	stream.unsetf(std::ios::skipws);
 
 	boost::spirit::istream_iterator begin(stream), end;
+	parser::definitions_t definitions;
+	auto rule = x3::with<parser::definitions_tag>(std::ref(definitions)) [parser::value_rule];
 	value_t value;
 
-	const bool ok = x3::parse(begin, end, parser::value_rule, value);
+	const bool ok = x3::parse(begin, end, rule, value);
 	if (!ok || begin != end)
 		throw std::runtime_error("Parsing failed.");
 
