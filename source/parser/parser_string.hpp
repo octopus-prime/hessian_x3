@@ -59,8 +59,8 @@ const auto string_rule_def = string_parser();
 const auto length_rule_def = ((length1_rule | length2_rule | length3_rule) >> x3::attr(true)) | (length4_rule >> x3::attr(false));
 const auto length1_rule_def = byte_rule(0x00, 0x1f);
 const auto length2_rule_def = (byte_rule(0x30, 0x33) >> x3::byte_) [ calc_action<size_t,8>(0x30) ];
-const auto length3_rule_def = x3::lit("S") >> x3::big_word;
-const auto length4_rule_def = x3::lit("R") >> x3::big_word;
+const auto length3_rule_def = x3::lit('S') >> x3::big_word;
+const auto length4_rule_def = x3::lit('R') >> x3::big_word;
 
 BOOST_SPIRIT_DEFINE(string_rule, length_rule, length1_rule, length2_rule, length3_rule, length4_rule);
 
