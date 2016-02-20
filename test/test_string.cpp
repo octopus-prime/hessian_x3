@@ -8,47 +8,10 @@
 #include <hessian/parser.hpp>
 #include <boost/test/unit_test.hpp>
 #include <boost/test/data/test_case.hpp>
-#include <boost/format.hpp>
-#include <boost/algorithm/string/erase.hpp>
 #include "sample.hpp"
 
 namespace hessian {
 namespace parser {
-
-static string_t
-make_string_1024()
-{
-	boost::format f("%02d 456789012345678901234567890123456789012345678901234567890123\n");
-
-	string_t value;
-	for (std::size_t i = 0; i < 16; i++)
-		value += (f % i).str();
-	return value;
-}
-
-static string_t
-make_string_1023()
-{
-	return boost::algorithm::erase_tail_copy(make_string_1024(), 1);
-}
-
-static string_t
-make_string_65536()
-{
-	boost::format f("%03d 56789012345678901234567890123456789012345678901234567890123\n");
-
-	string_t value;
-	for (std::size_t j = 0; j < 2; j++)
-		for (std::size_t i = 0; i < 32 * 16; i++)
-			value += (f % i).str();
-	return value;
-}
-
-static string_t
-make_string_65535()
-{
-	return boost::algorithm::erase_tail_copy(make_string_65536(), 1);
-}
 
 const string_t s1023 = make_string_1023();
 const string_t s1024 = make_string_1024();
