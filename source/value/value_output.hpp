@@ -86,7 +86,9 @@ output_visitor::operator()(const string_t& value)
 output_visitor::result_type
 output_visitor::operator()(const binary_t& value)
 {
-	_stream << "binary('" << boost::algorithm::hex(value) << "')";
+	_stream << "binary('";
+	boost::algorithm::hex(value, std::ostream_iterator<char>(_stream));
+	_stream << "')";
 }
 
 output_visitor::result_type
