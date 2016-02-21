@@ -18,7 +18,8 @@ parse(std::istream& stream)
 
 	boost::spirit::istream_iterator begin(stream), end;
 	parser::def_t def;
-	const auto rule = x3::with<parser::def_tag>(std::ref(def)) [parser::value_rule];
+	parser::ref_t ref;
+	const auto rule = x3::with<parser::def_tag>(std::ref(def)) [ x3::with<parser::ref_tag>(std::ref(ref)) [parser::value_rule] ];
 	value_t value;
 
 	const bool ok = x3::parse(begin, end, rule, value);
@@ -33,7 +34,8 @@ parse(std::istream& stream)
 //{
 //	std::string::const_iterator begin(stream.begin()), end(stream.end());
 //	parser::def_t def;
-//	const auto rule = x3::with<parser::def_tag>(std::ref(def)) [parser::value_rule];
+//	parser::ref_t ref;
+//	const auto rule = x3::with<parser::def_tag>(std::ref(def)) [ x3::with<parser::ref_tag>(std::ref(ref)) [parser::value_rule] ];
 //	value_t value;
 //
 //	const bool ok = x3::parse(begin, end, rule, value);

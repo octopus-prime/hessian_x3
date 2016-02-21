@@ -30,11 +30,18 @@ struct list_parser : x3::parser<list_parser>
 		const auto saved = first;
 		size_t length = 0;
 
-		if (length_rule.parse(first, last, context, rcontext, length))
+		if (x3::parse(first, last, length_rule, length))
 		{
+			ref_t& ref = x3::get<ref_tag>(context);
+			const size_t position = ref.size();
+			ref.push_back(null_t());
+
 			const auto rule = x3::repeat(length) [value_rule];
 			if (rule.parse(first, last, context, rcontext, attr))
+			{
+				ref.at(position) = attr;
 				return true;
+			}
 		}
 
 		first = saved;

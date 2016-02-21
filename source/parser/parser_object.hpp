@@ -28,8 +28,12 @@ struct object_parser : x3::parser<object_parser>
 		const auto saved = first;
 		size_t index = 0;
 
-		if (index_rule.parse(first, last, context, rcontext, index))
+		if (x3::parse(first, last, index_rule, index))
 		{
+			ref_t& ref = x3::get<ref_tag>(context);
+			const size_t position = ref.size();
+			ref.push_back(null_t());
+
 			const def_t& def = x3::get<def_tag>(context);
 
 			for (const string_t& key : def.at(index))
@@ -42,6 +46,7 @@ struct object_parser : x3::parser<object_parser>
 				x3::traits::push_back(attr, std::make_pair(key, value));
 			}
 
+			ref.at(position) = attr;
 			return true;
 		}
 
