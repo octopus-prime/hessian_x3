@@ -28,7 +28,7 @@ struct list_parser : x3::parser<list_parser>
     bool parse(Iterator& first, const Iterator& last, const Context& context, RContext& rcontext, Attribute& attr) const
     {
 		const auto saved = first;
-		size_t length;
+		size_t length = 0;
 
 		if (length_rule.parse(first, last, context, rcontext, length))
 		{
