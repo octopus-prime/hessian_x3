@@ -22,7 +22,7 @@ const x3::rule<class length4_rule, size_t> length4_rule;
 
 struct binary_parser : x3::parser<binary_parser>
 {
-    using attribute_type = hessian::binary_t;
+    using attribute_type = binary_t;
 
     template <typename Iterator, typename Context, typename RContext, typename Attribute>
     bool parse(Iterator& first, const Iterator& last, const Context& context, RContext& rcontext, Attribute& attr) const

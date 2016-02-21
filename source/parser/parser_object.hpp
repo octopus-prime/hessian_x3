@@ -20,7 +20,7 @@ const x3::rule<class index2_rule, size_t> index2_rule;
 
 struct object_parser : x3::parser<object_parser>
 {
-    using attribute_type = hessian::object_t;
+    using attribute_type = object_t;
 
     template <typename Iterator, typename Context, typename RContext, typename Attribute>
     bool parse(Iterator& first, const Iterator& last, const Context& context, RContext& rcontext, Attribute& attr) const

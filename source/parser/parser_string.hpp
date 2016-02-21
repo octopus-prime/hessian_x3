@@ -22,7 +22,7 @@ const x3::rule<class length4_rule, size_t> length4_rule;
 
 struct string_parser : x3::parser<string_parser>
 {
-    using attribute_type = hessian::string_t;
+    using attribute_type = string_t;
 
     template <typename Iterator>
     using u8_u16_iterator = boost::u32_to_u16_iterator<boost::u8_to_u32_iterator<Iterator>>;
