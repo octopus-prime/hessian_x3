@@ -28,12 +28,12 @@ struct def_parser : x3::parser<def_parser>
 		const auto saved = first;
 		size_t length = 0;
 
-		if (length_rule.parse(first, last, context, rcontext, length))
+		if (x3::parse(first, last, length_rule, length))
 		{
 			const auto rule = x3::repeat(length) [string_rule];
 			std::vector<std::string> members;
 
-			if (rule.parse(first, last, context, rcontext, members))
+			if (x3::parse(first, last, rule, members))
 			{
 				def_t& def = x3::get<def_tag>(context);
 				def.push_back(members);
