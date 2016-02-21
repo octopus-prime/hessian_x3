@@ -28,7 +28,7 @@ struct class_parser : x3::parser<class_parser>
     bool parse(Iterator& first, const Iterator& last, const Context& context, RContext& rcontext, Attribute& attr) const
     {
 		const auto saved = first;
-		size_t length;
+		size_t length = 0;
 
 		if (length_rule.parse(first, last, context, rcontext, length))
 		{
@@ -45,10 +45,16 @@ struct class_parser : x3::parser<class_parser>
 const auto class_action = [](auto& ctx)
 {
 	definitions_t& definitions = x3::get<definitions_tag>(ctx);
-	definitions.push_back(x3::_attr(ctx));
+	const class_t& clazz = x3::_attr(ctx);
+	definitions.push_back(clazz);
 };
 
-const auto def_rule_def = class_rule [ class_action ] >> value_rule;
+const auto copy_action = [](auto& ctx)
+{
+	x3::_val(ctx) = x3::_attr(ctx);
+};
+
+const auto def_rule_def = class_rule [ class_action ] >> value_rule [ copy_action ];
 const auto class_rule_def = class_parser();
 const auto length_rule_def = x3::lit('C') >> x3::omit [string_rule] >> int_rule;
 
