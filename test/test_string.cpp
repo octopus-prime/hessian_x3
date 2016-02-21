@@ -33,15 +33,30 @@ const success_samples_t success_samples
 	{"\x05""a""1""是""本""文"s, "a""1""是""本""文"s}
 };
 
+const failure_samples_t failure_samples
+{
+	"\x00 "s,
+//	"\x01"s, //FIXME
+	"\x01""12"s,
+	"R\x00\x00"s
+};
+
 BOOST_AUTO_TEST_SUITE(test_string)
 
-BOOST_DATA_TEST_CASE(test, success_samples, sample)
+BOOST_DATA_TEST_CASE(test_success, success_samples, sample)
 {
 	std::istringstream stream(sample.first);
 	value_t value;
 
 	BOOST_REQUIRE_NO_THROW(value = parse(stream));
 	BOOST_CHECK_EQUAL(value, sample.second);
+}
+
+BOOST_DATA_TEST_CASE(test_failure, failure_samples, sample)
+{
+	std::istringstream stream(sample);
+
+	BOOST_CHECK_THROW(parse(stream), parse_exception);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
