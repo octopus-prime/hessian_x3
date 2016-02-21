@@ -13,14 +13,14 @@
 namespace hessian {
 namespace parser {
 
-const samples_t samples
+const success_samples_t success_samples
 {
 	{"N"s, null_t()}
 };
 
 BOOST_AUTO_TEST_SUITE(test_null)
 
-BOOST_DATA_TEST_CASE(test, samples, sample)
+BOOST_DATA_TEST_CASE(test, success_samples, sample)
 {
 	std::istringstream stream(sample.first);
 	value_t value;

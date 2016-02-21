@@ -52,7 +52,8 @@ make_string_65535()
 }
 
 typedef std::pair<string_t, value_t> sample_t;
-typedef std::vector<sample_t> samples_t;
+typedef std::vector<sample_t> success_samples_t;
+typedef std::vector<string_t> failure_samples_t;
 
 }
 

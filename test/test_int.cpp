@@ -18,7 +18,7 @@ int_t operator"" _i (const unsigned long long i)
 	return static_cast<int_t>(i);
 }
 
-const samples_t samples
+const success_samples_t success_samples
 {
 	{"\x90"s, 0_i},
 	{"\x91"s, 1_i},
@@ -40,7 +40,7 @@ const samples_t samples
 
 BOOST_AUTO_TEST_SUITE(test_int)
 
-BOOST_DATA_TEST_CASE(test, samples, sample)
+BOOST_DATA_TEST_CASE(test, success_samples, sample)
 {
 	std::istringstream stream(sample.first);
 	value_t value;

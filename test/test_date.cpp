@@ -21,7 +21,7 @@ date_t operator"" _d(const char* s, const size_t l)
     return from_iso_string(string_t(s, s + l));
 }
 
-const samples_t samples
+const success_samples_t success_samples
 {
 	{"K\x00\x00\x00\x00"s, "19700101T000000"_d},
 	{"K\x00\xe3\x83\x8f"s, "19980508T095100"_d},
@@ -30,7 +30,7 @@ const samples_t samples
 
 BOOST_AUTO_TEST_SUITE(test_date)
 
-BOOST_DATA_TEST_CASE(test, samples, sample)
+BOOST_DATA_TEST_CASE(test, success_samples, sample)
 {
 	std::istringstream stream(sample.first);
 	value_t value;

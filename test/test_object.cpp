@@ -13,7 +13,7 @@
 namespace hessian {
 namespace parser {
 
-const samples_t samples
+const success_samples_t success_samples
 {
 	{"C""\x00""\x90""\x60"s, object_t{}},
 	{"C""\x00""\x91""\x06""_value""\x60""\x90"s, object_t{{"_value"s, 0}}},
@@ -44,7 +44,7 @@ const samples_t samples
 
 BOOST_AUTO_TEST_SUITE(test_object)
 
-BOOST_DATA_TEST_CASE(test, samples, sample)
+BOOST_DATA_TEST_CASE(test, success_samples, sample)
 {
 	std::istringstream stream(sample.first);
 	value_t value;

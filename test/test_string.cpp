@@ -18,7 +18,7 @@ const string_t s1024 = make_string_1024();
 const string_t s65535 = make_string_65535();
 const string_t s65536 = make_string_65536();
 
-const samples_t samples
+const success_samples_t success_samples
 {
 	{"\x00"s, ""s},
 	{"\x01""0"s, "0"s},
@@ -35,7 +35,7 @@ const samples_t samples
 
 BOOST_AUTO_TEST_SUITE(test_string)
 
-BOOST_DATA_TEST_CASE(test, samples, sample)
+BOOST_DATA_TEST_CASE(test, success_samples, sample)
 {
 	std::istringstream stream(sample.first);
 	value_t value;
