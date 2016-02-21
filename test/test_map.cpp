@@ -26,15 +26,33 @@ const success_samples_t success_samples
 	{"M""\x13""java.lang.Hashtable""\x79""\x01""a""\x90""Z"s, map_t{{list_t{"a"s}, 0}}}
 };
 
+const failure_samples_t failure_samples
+{
+	"H"s,
+	"HNZ"s,
+	"HZZ"s,
+	"M"s,
+	"MN"s,
+	"M\x00NZ"s,
+	"M\x00ZZ"s
+};
+
 BOOST_AUTO_TEST_SUITE(test_map)
 
-BOOST_DATA_TEST_CASE(test, success_samples, sample)
+BOOST_DATA_TEST_CASE(test_success, success_samples, sample)
 {
 	std::istringstream stream(sample.first);
 	value_t value;
 
 	BOOST_REQUIRE_NO_THROW(value = parse(stream));
 	BOOST_CHECK_EQUAL(value, sample.second);
+}
+
+BOOST_DATA_TEST_CASE(test_failure, failure_samples, sample)
+{
+	std::istringstream stream(sample);
+
+	BOOST_CHECK_THROW(parse(stream), parse_exception);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
