@@ -30,11 +30,12 @@ struct object_parser : x3::parser<object_parser>
 
 		if (index_rule.parse(first, last, context, rcontext, index))
 		{
-			const definitions_t& definitions = x3::get<definitions_tag>(context);
+			const def_t& def = x3::get<def_tag>(context);
 
-			for (const string_t& key : definitions.at(index))
+			for (const string_t& key : def.at(index))
 			{
 				value_t value;
+
 				if (!value_rule.parse(first, last, context, rcontext, value))
 					break;
 

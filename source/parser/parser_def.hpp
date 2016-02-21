@@ -10,19 +10,17 @@
 namespace hessian {
 namespace parser {
 
-struct definitions_tag;
-typedef std::vector<std::string> class_t;
-typedef std::vector<class_t> definitions_t;
+struct def_tag;
+typedef std::vector<std::vector<std::string>> def_t;
 
 namespace def {
 
 const x3::rule<class def_rule, value_t> def_rule("def");
-const x3::rule<class class_rule, class_t> class_rule("class");
 const x3::rule<class length_rule, size_t> length_rule;
 
-struct class_parser : x3::parser<class_parser>
+struct def_parser : x3::parser<def_parser>
 {
-    using attribute_type = definitions_t;
+    using attribute_type = def_t;
 
     template <typename Iterator, typename Context, typename RContext, typename Attribute>
     bool parse(Iterator& first, const Iterator& last, const Context& context, RContext& rcontext, Attribute& attr) const
@@ -33,8 +31,16 @@ struct class_parser : x3::parser<class_parser>
 		if (length_rule.parse(first, last, context, rcontext, length))
 		{
 			const auto rule = x3::repeat(length) [string_rule];
-			if (rule.parse(first, last, context, rcontext, attr))
-				return true;
+			std::vector<std::string> members;
+
+			if (rule.parse(first, last, context, rcontext, members))
+			{
+				def_t& def = x3::get<def_tag>(context);
+				def.push_back(members);
+
+				if (value_rule.parse(first, last, context, rcontext, attr))
+					return true;
+			}
 		}
 
 		first = saved;
@@ -42,23 +48,10 @@ struct class_parser : x3::parser<class_parser>
 	}
 };
 
-const auto class_action = [](auto& ctx)
-{
-	definitions_t& definitions = x3::get<definitions_tag>(ctx);
-	const class_t& clazz = x3::_attr(ctx);
-	definitions.push_back(clazz);
-};
-
-const auto copy_action = [](auto& ctx)
-{
-	x3::_val(ctx) = x3::_attr(ctx);
-};
-
-const auto def_rule_def = class_rule [ class_action ] >> value_rule [ copy_action ];
-const auto class_rule_def = class_parser();
+const auto def_rule_def = def_parser();
 const auto length_rule_def = x3::lit('C') >> x3::omit [string_rule] >> int_rule;
 
-BOOST_SPIRIT_DEFINE(def_rule, class_rule, length_rule);
+BOOST_SPIRIT_DEFINE(def_rule, length_rule);
 
 }
 
