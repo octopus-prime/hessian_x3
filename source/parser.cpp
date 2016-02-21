@@ -11,6 +11,12 @@
 
 namespace hessian {
 
+const char*
+parse_exception::what() const noexcept
+{
+	return "Parsing failed.";
+}
+
 value_t
 parse(std::istream& stream)
 {
@@ -24,7 +30,7 @@ parse(std::istream& stream)
 
 	const bool ok = x3::parse(begin, end, rule, value);
 	if (!ok || begin != end)
-		throw std::runtime_error("Parsing failed.");
+		throw parse_exception();
 
 	return value;
 }
@@ -40,7 +46,7 @@ parse(std::istream& stream)
 //
 //	const bool ok = x3::parse(begin, end, rule, value);
 //	if (!ok || begin != end)
-//		throw std::runtime_error("Parsing failed.");
+//		throw parse_exception();
 //
 //	return value;
 //}
