@@ -23,7 +23,7 @@ const string_t s1024 = make_string_1024();
 const string_t s65535 = make_string_65535();
 const string_t s65536 = make_string_65536();
 
-const samples_t samples
+const success_samples_t success_samples
 {
 	{"\x20"s, ""_b},
 	{"\x21""0"s, "0"_b},
@@ -35,15 +35,30 @@ const samples_t samples
 	{"A\xff\xff"s + string_t(s65536).insert(65535, 1, '\x21'), binary_t(s65536.begin(), s65536.end())}
 };
 
+const failure_samples_t failure_samples
+{
+	"\x20 "s,
+	"\x21"s,
+	"\x21""12"s,
+	"A\x00\x00"s
+};
+
 BOOST_AUTO_TEST_SUITE(test_binary)
 
-BOOST_DATA_TEST_CASE(test, samples, sample)
+BOOST_DATA_TEST_CASE(test_success, success_samples, sample)
 {
 	std::istringstream stream(sample.first);
 	value_t value;
 
 	BOOST_REQUIRE_NO_THROW(value = parse(stream));
 	BOOST_CHECK_EQUAL(value, sample.second);
+}
+
+BOOST_DATA_TEST_CASE(test_failure, failure_samples, sample)
+{
+	std::istringstream stream(sample);
+
+	BOOST_CHECK_THROW(parse(stream), parse_exception);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
