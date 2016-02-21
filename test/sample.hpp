@@ -51,21 +51,17 @@ make_string_65535()
 	return boost::algorithm::erase_tail_copy(make_string_65536(), 1);
 }
 
-template <typename T>
-using sample_t = std::pair<std::string, T>;
-
-template <typename T>
-using samples_t = std::vector<sample_t<T>>;
+typedef std::pair<string_t, value_t> sample_t;
+typedef std::vector<sample_t> samples_t;
 
 }
 
 namespace std {
 
-template <typename T>
 inline ostream&
-operator<<(ostream& stream, const hessian::sample_t<T>& sample)
+operator<<(ostream& stream, const hessian::sample_t& sample)
 {
-	stream << boost::algorithm::hex(sample.first) << " & " << hessian::value_t(sample.second);
+	stream << boost::algorithm::hex(sample.first) << " & " << sample.second;
 	return stream;
 }
 

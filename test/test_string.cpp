@@ -18,7 +18,7 @@ const string_t s1024 = make_string_1024();
 const string_t s65535 = make_string_65535();
 const string_t s65536 = make_string_65536();
 
-const samples_t<string_t> samples
+const samples_t samples
 {
 	{"\x00"s, ""s},
 	{"\x01""0"s, "0"s},
@@ -41,7 +41,7 @@ BOOST_DATA_TEST_CASE(test, samples, sample)
 	value_t value;
 
 	BOOST_REQUIRE_NO_THROW(value = parse(stream));
-	BOOST_CHECK_EQUAL(value, value_t(sample.second));
+	BOOST_CHECK_EQUAL(value, sample.second);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

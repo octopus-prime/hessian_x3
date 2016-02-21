@@ -13,7 +13,7 @@
 namespace hessian {
 namespace parser {
 
-const samples_t<value_t> samples
+const samples_t samples
 {
 	{"C""\x00""\x90""\x60"s, object_t{}},
 	{"C""\x00""\x91""\x06""_value""\x60""\x90"s, object_t{{"_value"s, 0}}},

@@ -16,11 +16,16 @@ using boost::posix_time::from_iso_string;
 namespace hessian {
 namespace parser {
 
-const samples_t<date_t> samples
+date_t operator"" _d(const char* s, const size_t l)
 {
-	{"K\x00\x00\x00\x00"s, from_iso_string("19700101T000000"s)},
-	{"K\x00\xe3\x83\x8f"s, from_iso_string("19980508T095100"s)},
-	{"J\x00\x00\x00\xd0\x4b\x92\x84\xb8"s, from_iso_string("19980508T095131"s)}
+    return from_iso_string(string_t(s, s + l));
+}
+
+const samples_t samples
+{
+	{"K\x00\x00\x00\x00"s, "19700101T000000"_d},
+	{"K\x00\xe3\x83\x8f"s, "19980508T095100"_d},
+	{"J\x00\x00\x00\xd0\x4b\x92\x84\xb8"s, "19980508T095131"_d}
 };
 
 BOOST_AUTO_TEST_SUITE(test_date)
@@ -31,7 +36,7 @@ BOOST_DATA_TEST_CASE(test, samples, sample)
 	value_t value;
 
 	BOOST_REQUIRE_NO_THROW(value = parse(stream));
-	BOOST_CHECK_EQUAL(value, value_t(sample.second));
+	BOOST_CHECK_EQUAL(value, sample.second);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

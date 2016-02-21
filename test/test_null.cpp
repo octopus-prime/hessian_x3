@@ -13,7 +13,7 @@
 namespace hessian {
 namespace parser {
 
-const samples_t<null_t> samples
+const samples_t samples
 {
 	{"N"s, null_t()}
 };
@@ -26,7 +26,7 @@ BOOST_DATA_TEST_CASE(test, samples, sample)
 	value_t value;
 
 	BOOST_REQUIRE_NO_THROW(value = parse(stream));
-	BOOST_CHECK_EQUAL(value, value_t(sample.second));
+	BOOST_CHECK_EQUAL(value, sample.second);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
