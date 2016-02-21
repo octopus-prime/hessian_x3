@@ -24,18 +24,18 @@ struct binary_parser : x3::parser<binary_parser>
 {
     using attribute_type = binary_t;
 
-    template <typename Iterator, typename Context, typename RContext, typename Attribute>
-    bool parse(Iterator& first, const Iterator& last, const Context& context, RContext& rcontext, Attribute& attr) const
+    template <typename Iterator, typename Context, typename Attribute>
+    bool parse(Iterator& first, const Iterator& last, const Context&, x3::unused_type, Attribute& attr) const
     {
 		const auto saved = first;
-		size_t length;
-		bool done;
+		size_t length = 0;
+		bool done = false;
 		auto tied = std::tie(length, done);
 
-		while (length_rule.parse(first, last, context, rcontext, tied))
+		while (x3::parse(first, last, length_rule, tied))
 		{
 			const auto rule = x3::repeat(length) [x3::byte_];
-			if (!rule.parse(first, last, context, rcontext, attr))
+			if (!x3::parse(first, last, rule, attr))
 				break;
 
 			if (done)

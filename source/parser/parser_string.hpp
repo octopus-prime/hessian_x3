@@ -27,15 +27,15 @@ struct string_parser : x3::parser<string_parser>
     template <typename Iterator>
     using u8_u16_iterator = boost::u32_to_u16_iterator<boost::u8_to_u32_iterator<Iterator>>;
 
-    template <typename Iterator, typename Context, typename RContext, typename Attribute>
-    bool parse(Iterator& first, const Iterator& last, const Context& context, RContext& rcontext, Attribute& attr) const
+    template <typename Iterator, typename Context, typename Attribute>
+    bool parse(Iterator& first, const Iterator& last, const Context&, x3::unused_type, Attribute& attr) const
     {
 		const auto saved = first;
-		size_t length;
-		bool done;
+		size_t length = 0;
+		bool done = false;
 		auto tied = std::tie(length, done);
 
-		while (length_rule.parse(first, last, context, rcontext, tied))
+		while (x3::parse(first, last, length_rule, tied))
 		{
 			// NOTE: The length means number of UTF16 characters but the content is given in UTF8 characters!
 			u8_u16_iterator<Iterator> iterator(first);
