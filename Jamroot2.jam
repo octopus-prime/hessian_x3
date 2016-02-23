@@ -1,0 +1,39 @@
+import os ;
+
+using clang : : [ os.environ CXX ] ;
+using testing ;
+
+project hessian
+	:
+		requirements
+		<cxxflags>-std=c++14
+		<include>include
+		<define>BOOST_ALL_DYN_LINK
+	;
+
+lib hessian
+	:
+		[ glob source/*.cpp ]
+		/site-config//cppnetlib-uri
+		/site-config//cppnetlib-client-connections
+		/site-config//boost_thread
+		/site-config//boost_system
+		/site-config//pthread
+	:
+		<include>/home/mike_gresens/workspace/spirit/include
+#		<define>BOOST_NETWORK_NO_LIB
+		<link>static
+	;
+
+exe hessian-example
+	:
+		[ glob example/Test.cpp ]
+		hessian
+	;
+
+unit-test hessian-test
+	:
+		[ glob test/*.cpp ]
+		hessian
+		/site-config//boost_unit_test_framework
+	;
