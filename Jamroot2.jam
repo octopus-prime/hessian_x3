@@ -21,8 +21,7 @@ lib hessian
 		/site-config//pthread
 	:
 		<include>/home/mike_gresens/workspace/spirit/include
-#		<define>BOOST_NETWORK_NO_LIB
-		<link>static
+		<define>BOOST_NETWORK_ENABLE_HTTPS
 	;
 
 exe hessian-example
