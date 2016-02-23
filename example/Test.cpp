@@ -9,26 +9,36 @@
 
 using namespace std::literals;
 
-class service_base_t
+class service_base
 {
 protected:
-	virtual ~service_base_t() noexcept = default;
+	virtual ~service_base() noexcept = default;
 
 public:
 	virtual std::int32_t replyInt_0() = 0;
 	virtual std::int32_t replyInt_1() = 0;
 	virtual std::int64_t replyLong_0() = 0;
 	virtual std::int64_t replyLong_1() = 0;
+	virtual double replyDouble_0() = 0;
+	virtual double replyDouble_1() = 0;
+	virtual std::string replyString_31() = 0;
+	virtual std::string replyString_1023() = 0;
 };
 
-typedef std::shared_ptr<service_base_t> service_t;
+typedef std::shared_ptr<service_base> service_t;
 
-class service_impl_t : public virtual service_base_t
+class service_impl : public virtual service_base
 {
 public:
-	service_impl_t(const std::string& host)
+	service_impl(const std::string& host)
 	:
 		_client(hessian::connect(host))
+	{
+	}
+
+	service_impl(const hessian::client_t& client)
+	:
+		_client(client)
 	{
 	}
 
@@ -52,6 +62,27 @@ public:
 		return boost::get<hessian::long_t>(call("replyLong_1", {}));
 	}
 
+	virtual double replyDouble_0() override
+	{
+		return boost::get<hessian::double_t>(call("replyDouble_0_0", {}));
+	}
+
+	virtual double replyDouble_1() override
+	{
+		return boost::get<hessian::double_t>(call("replyDouble_1_0", {}));
+	}
+
+	virtual std::string replyString_31() override
+	{
+		return boost::get<hessian::string_t>(call("replyString_31", {}));
+	}
+
+	virtual std::string replyString_1023() override
+	{
+		return boost::get<hessian::string_t>(call("replyString_1023", {}));
+	}
+
+
 protected:
 	hessian::value_t call(const hessian::string_t& method, const hessian::value_t& arguments)
 	{
@@ -66,12 +97,18 @@ int main()
 {
 	try
 	{
-		const service_t service = std::make_shared<service_impl_t>("http://hessian.caucho.com");
+		const hessian::client_t client = hessian::connect("http://hessian.caucho.com");
+		const service_t service1 = std::make_shared<service_impl>(client);
+		const service_t service2 = std::make_shared<service_impl>(client);
 
-		std::cout << service->replyInt_0() << std::endl;
-		std::cout << service->replyInt_1() << std::endl;
-		std::cout << service->replyLong_0() << std::endl;
-		std::cout << service->replyLong_1() << std::endl;
+		std::cout << service1->replyInt_0() << std::endl;
+		std::cout << service2->replyInt_1() << std::endl;
+		std::cout << service1->replyLong_0() << std::endl;
+		std::cout << service2->replyLong_1() << std::endl;
+		std::cout << service1->replyDouble_0() << std::endl;
+		std::cout << service2->replyDouble_1() << std::endl;
+		std::cout << service1->replyString_31() << std::endl;
+		std::cout << service2->replyString_1023() << std::endl;
 	}
 	catch (const std::exception& exception)
 	{
