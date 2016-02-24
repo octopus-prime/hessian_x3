@@ -23,6 +23,7 @@ public:
 	virtual double replyDouble_1() = 0;
 	virtual std::string replyString_31() = 0;
 	virtual std::string replyString_1023() = 0;
+	virtual void replyFault() = 0;
 };
 
 typedef std::shared_ptr<service_base> service_t;
@@ -82,6 +83,10 @@ public:
 		return boost::get<hessian::string_t>(call("replyString_1023", {}));
 	}
 
+	virtual void replyFault() override
+	{
+		call("doesNotExist", {});
+	}
 
 protected:
 	hessian::value_t call(const hessian::string_t& method, const hessian::value_t& arguments)
@@ -109,6 +114,8 @@ int main()
 		std::cout << service2->replyDouble_1() << std::endl;
 		std::cout << service1->replyString_31() << std::endl;
 		std::cout << service2->replyString_1023() << std::endl;
+
+		service1->replyFault();
 	}
 	catch (const std::exception& exception)
 	{

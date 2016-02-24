@@ -8,9 +8,16 @@
 #pragma once
 
 #include <hessian/value.hpp>
+#include <hessian/exception.hpp>
 #include <memory>
 
 namespace hessian {
+
+class fault_exception :	public virtual exception
+{
+public:
+	virtual const map_t& fault() const noexcept = 0;
+};
 
 class client_base
 {

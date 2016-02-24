@@ -14,6 +14,31 @@ using namespace boost::network;
 
 namespace hessian {
 
+class fault_exception_impl : public virtual fault_exception
+{
+public:
+	fault_exception_impl(const fault_t& fault)
+	:
+		_fault(fault),
+		_what(boost::get<string_t>(_fault.at("message"s)))
+	{
+	}
+
+	virtual const char* what() const noexcept override
+	{
+		return _what.c_str();
+	}
+
+	virtual const map_t& fault() const noexcept override
+	{
+		return _fault;
+	}
+
+private:
+	fault_t _fault;
+	string_t _what;
+};
+
 struct content_visitor : boost::static_visitor<const value_t&>
 {
 	result_type operator()(const reply_t& content) const
@@ -23,7 +48,7 @@ struct content_visitor : boost::static_visitor<const value_t&>
 
 	result_type operator()(const fault_t& content) const
 	{
-		throw std::runtime_error("Fault");
+		throw fault_exception_impl(content);
 	}
 };
 
