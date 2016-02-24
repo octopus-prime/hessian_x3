@@ -48,6 +48,7 @@ public:
 		out.push_back('\x90');
 
 		http::client::request request(url);
+		request << header("Connection", "close");
 		request << header("Content-Length", std::to_string(out.size()));
 		request << body(out);
 
