@@ -44,13 +44,11 @@ const success_samples_t success_samples
 
 BOOST_AUTO_TEST_SUITE(test_object)
 
-BOOST_DATA_TEST_CASE(test, success_samples, sample)
+BOOST_DATA_TEST_CASE(test_success, success_samples, sample)
 {
-	std::istringstream stream(sample.first);
-	value_t value;
-
-	BOOST_REQUIRE_NO_THROW(value = parse(stream));
-	BOOST_CHECK_EQUAL(value, sample.second);
+	content_t content;
+	BOOST_REQUIRE_NO_THROW(content = parse("H\x02\x00""R"s + sample.first));
+	BOOST_CHECK_EQUAL(boost::get<value_t>(content), sample.second);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

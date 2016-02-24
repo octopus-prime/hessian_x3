@@ -14,6 +14,19 @@ using namespace boost::network;
 
 namespace hessian {
 
+struct content_visitor : boost::static_visitor<const value_t&>
+{
+	result_type operator()(const reply_t& content) const
+	{
+		return content;
+	}
+
+	result_type operator()(const fault_t& content) const
+	{
+		throw std::runtime_error("Fault");
+	}
+};
+
 class client_impl : public virtual client_base
 {
 public:
@@ -35,15 +48,12 @@ public:
 		out.push_back('\x90');
 
 		http::client::request request(url);
-//		request << header("Connection", "close");
 		request << header("Content-Length", std::to_string(out.size()));
 		request << body(out);
 
-		http::client::response response = _client.post(request);
-		std::stringstream stream(body(response));
-		char c;
-		stream >> c >> c >> c >> c;
-		return hessian::parse(stream);
+		const http::client::response response = _client.post(request);
+		const content_t content = hessian::parse(body(response));
+		return boost::apply_visitor(content_visitor(), content);
 	}
 
 private:

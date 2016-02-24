@@ -18,7 +18,10 @@ public:
 	virtual const char* what() const noexcept override;
 };
 
-value_t parse(std::istream& stream);
-//value_t parse(const std::string& stream);
+typedef value_t reply_t;
+typedef map_t fault_t;
+typedef boost::variant<reply_t, fault_t> content_t;
+
+content_t parse(const std::string& stream);
 
 }
