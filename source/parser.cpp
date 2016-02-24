@@ -25,7 +25,7 @@ const x3::rule<class content_rule, content_t> content_rule;
 const x3::rule<class reply_rule, reply_t> reply_rule;
 const x3::rule<class fault_rule, fault_t> fault_rule;
 
-const auto content_rule_def = x3::lit('H') >> x3::lit('\x02') >> x3::lit('\x00') >> (reply_rule | fault_rule);
+const auto content_rule_def = x3::lit("H\x02\x00"s) >> (reply_rule | fault_rule);
 const auto reply_rule_def = x3::lit('R') >> value_rule;
 const auto fault_rule_def = x3::lit('F') >> map_rule;
 
