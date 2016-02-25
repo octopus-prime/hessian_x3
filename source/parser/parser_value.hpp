@@ -7,34 +7,6 @@
 
 #pragma once
 
-#include <boost/spirit/home/x3.hpp>
-
-namespace x3 = boost::spirit::x3;
-
-namespace hessian {
-namespace parser {
-
-const x3::rule<class value_rule, value_t> value_rule("value");
-
-}
-}
-
-#include "parser_byte.hpp"
-#include "parser_null.hpp"
-#include "parser_bool.hpp"
-#include "parser_int.hpp"
-#include "parser_long.hpp"
-#include "parser_double.hpp"
-#include "parser_date.hpp"
-#include "parser_string.hpp"
-#include "parser_binary.hpp"
-#include "parser_type.hpp"
-#include "parser_def.hpp"
-#include "parser_ref.hpp"
-#include "parser_list.hpp"
-#include "parser_map.hpp"
-#include "parser_object.hpp"
-
 namespace hessian {
 namespace parser {
 

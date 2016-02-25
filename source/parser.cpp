@@ -6,10 +6,24 @@
  */
 
 #include <hessian/parser.hpp>
+#include "parser/parser_value_fwd.hpp"
+#include "parser/parser_byte.hpp"
+#include "parser/parser_null.hpp"
+#include "parser/parser_bool.hpp"
+#include "parser/parser_int.hpp"
+#include "parser/parser_long.hpp"
+#include "parser/parser_double.hpp"
+#include "parser/parser_date.hpp"
+#include "parser/parser_string.hpp"
+#include "parser/parser_binary.hpp"
+#include "parser/parser_type.hpp"
+#include "parser/parser_def.hpp"
+#include "parser/parser_ref.hpp"
+#include "parser/parser_list.hpp"
+#include "parser/parser_map.hpp"
+#include "parser/parser_object.hpp"
 #include "parser/parser_value.hpp"
-#include <boost/spirit/include/support_istream_iterator.hpp>
-
-using namespace std::literals;
+#include "parser/parser_content.hpp"
 
 namespace hessian {
 
@@ -19,22 +33,8 @@ parse_exception::what() const noexcept
 	return "Parsing failed.";
 }
 
-namespace parser {
-
-const x3::rule<class content_rule, content_t> content_rule;
-const x3::rule<class reply_rule, reply_t> reply_rule;
-const x3::rule<class fault_rule, fault_t> fault_rule;
-
-const auto content_rule_def = x3::lit("H\x02\x00"s) >> (reply_rule | fault_rule);
-const auto reply_rule_def = x3::lit('R') >> value_rule;
-const auto fault_rule_def = x3::lit('F') >> map_rule;
-
-BOOST_SPIRIT_DEFINE(content_rule, reply_rule, fault_rule);
-
-}
-
 content_t
-parse(const std::string& stream)
+parse(std::string&& stream)
 {
 	std::string::const_iterator begin(stream.begin()), end(stream.end());
 	parser::def_t def;
@@ -46,7 +46,7 @@ parse(const std::string& stream)
 	if (!ok || begin != end)
 		throw parse_exception();
 
-	return content;
+	return std::move(content);
 }
 
 }
