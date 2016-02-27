@@ -71,7 +71,7 @@ public:
 		const string_t call = generate(method, arguments);
 		const http::client::request request(url);
 		const http::client::response response = _client.post(request, generate(method, arguments));
-		const content_t content = hessian::parse(body(response));
+		const content_t content = parse(body(response));
 		return boost::apply_visitor(content_visitor(), content);
 	}
 
