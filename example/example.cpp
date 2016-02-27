@@ -148,5 +148,5 @@ int main()
 	{
 		std::cout << "Error: " << exception.what() << std::endl;
 	}
-    return 0;
+	return 0;
 }
