@@ -6,6 +6,18 @@
  */
 
 #include <hessian/generator.hpp>
+#include "generator/generator_value.hpp"
+#include "generator/generator_null.hpp"
+#include "generator/generator_bool.hpp"
+#include "generator/generator_int.hpp"
+#include "generator/generator_long.hpp"
+#include "generator/generator_double.hpp"
+#include "generator/generator_date.hpp"
+#include "generator/generator_string.hpp"
+#include "generator/generator_binary.hpp"
+#include "generator/generator_list.hpp"
+#include "generator/generator_map.hpp"
+#include "generator/generator_object.hpp"
 
 using namespace std::literals;
 
@@ -23,11 +35,15 @@ public:
 string_t
 generate(const string_t& method, const list_t& arguments)
 {
-	std::string out = "H\x02\x00""C"s;
-	out.push_back((std::uint8_t) method.size());
-	out.append(method);
-	out.push_back('\x90' + arguments.size());
-	return std::move(out);
+	std::string call("H\x02\x00""C"s);
+
+	generator::value_visitor visitor(call);
+	visitor(method);
+	visitor(static_cast<int_t>(arguments.size()));
+	for (const auto& argument : arguments)
+		boost::apply_visitor(visitor, argument);
+
+	return std::move(call);
 }
 
 }
