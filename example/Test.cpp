@@ -89,7 +89,7 @@ public:
 	}
 
 protected:
-	hessian::value_t call(const hessian::string_t& method, const hessian::value_t& arguments)
+	hessian::value_t call(const hessian::string_t& method, const hessian::list_t& arguments)
 	{
 		return _client->call("/test/test2", method, arguments);
 	}

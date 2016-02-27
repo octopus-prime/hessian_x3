@@ -7,6 +7,7 @@
 
 #include <hessian/client.hpp>
 #include <hessian/parser.hpp>
+#include <hessian/generator.hpp>
 #include <boost/network.hpp>
 
 using namespace std::literals;
@@ -62,22 +63,14 @@ public:
 	{
 	}
 
-	virtual value_t call(const string_t& service, const string_t& method, const value_t& arguments) override
+	virtual value_t call(const string_t& service, const string_t& method, const list_t& arguments) override
 	{
 		uri::uri url(_url);
 		url << uri::path(service);
 
-		std::string out = "H\x02\x00""C"s;
-		out.push_back((std::uint8_t) method.size());
-		out.append(method);
-		out.push_back('\x90');
-
-		http::client::request request(url);
-		request << header("Connection", "close");
-		request << header("Content-Length", std::to_string(out.size()));
-		request << body(out);
-
-		const http::client::response response = _client.post(request);
+		const string_t call = generate(method, arguments);
+		const http::client::request request(url);
+		const http::client::response response = _client.post(request, generate(method, arguments));
 		const content_t content = hessian::parse(body(response));
 		return boost::apply_visitor(content_visitor(), content);
 	}

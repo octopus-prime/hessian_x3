@@ -12,17 +12,12 @@
 
 namespace hessian {
 
-class parse_exception : public virtual exception
-{
-public:
-	virtual const char* what() const noexcept override;
-};
-
 typedef value_t reply_t;
 typedef map_t fault_t;
 typedef boost::variant<reply_t, fault_t> content_t;
 
-//content_t parse(const std::string& stream);
-content_t parse(std::string&& stream);
+class parse_exception : public virtual exception {};
+
+content_t parse(const std::string& data);
 
 }

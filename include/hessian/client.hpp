@@ -25,7 +25,7 @@ protected:
 	virtual ~client_base() noexcept = default;
 
 public:
-	virtual value_t call(const string_t& service, const string_t& method, const value_t& arguments) = 0;
+	virtual value_t call(const string_t& service, const string_t& method, const list_t& arguments) = 0;
 };
 
 typedef std::shared_ptr<client_base> client_t;

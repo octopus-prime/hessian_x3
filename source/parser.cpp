@@ -27,16 +27,19 @@
 
 namespace hessian {
 
-const char*
-parse_exception::what() const noexcept
+class parse_exception_impl : public virtual parse_exception
 {
-	return "Parsing failed.";
-}
+public:
+	virtual const char* what() const noexcept override
+	{
+		return "Parsing failed.";
+	}
+};
 
 content_t
-parse(std::string&& stream)
+parse(const std::string& data)
 {
-	std::string::const_iterator begin(stream.begin()), end(stream.end());
+	std::string::const_iterator begin(data.begin()), end(data.end());
 	parser::def_t def;
 	parser::ref_t ref;
 	const auto rule = x3::with<parser::def_tag>(std::ref(def)) [ x3::with<parser::ref_tag>(std::ref(ref)) [parser::content_rule] ];
@@ -44,7 +47,7 @@ parse(std::string&& stream)
 
 	const bool ok = x3::parse(begin, end, rule, content);
 	if (!ok || begin != end)
-		throw parse_exception();
+		throw parse_exception_impl();
 
 	return std::move(content);
 }
