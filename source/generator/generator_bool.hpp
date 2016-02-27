@@ -11,7 +11,8 @@ namespace generator {
 value_visitor::result_type
 value_visitor::operator()(const bool_t& value)
 {
-	_data.push_back(value ? 'T' : 'F');
+	constexpr char bools[] = {'T', 'F'};
+	_data.push_back(bools[value]);
 }
 
 }
