@@ -30,6 +30,6 @@ public:
 
 typedef std::shared_ptr<client_base> client_t;
 
-client_t connect(const string_t& host);
+client_t make_client(const string_t& host);
 
 }

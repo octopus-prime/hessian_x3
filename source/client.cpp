@@ -82,7 +82,8 @@ private:
 	http::client _client;
 };
 
-client_t connect(const std::string& host)
+client_t
+make_client(const std::string& host)
 {
 	return std::make_shared<client_impl>(host);
 }
