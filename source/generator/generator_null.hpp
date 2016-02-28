@@ -5,13 +5,15 @@
  *      Author: mike_gresens
  */
 
+#pragma once
+
 namespace hessian {
 namespace generator {
 
 value_visitor::result_type
 value_visitor::operator()(const null_t& value)
 {
-	_data.push_back('N');
+	push_back<std::int8_t>('N');
 }
 
 }

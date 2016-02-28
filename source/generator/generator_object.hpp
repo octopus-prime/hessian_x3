@@ -5,6 +5,8 @@
  *      Author: mike_gresens
  */
 
+#pragma once
+
 namespace hessian {
 namespace generator {
 

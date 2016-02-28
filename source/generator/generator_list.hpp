@@ -5,6 +5,8 @@
  *      Author: mike_gresens
  */
 
+#pragma once
+
 namespace hessian {
 namespace generator {
 
@@ -13,8 +15,9 @@ value_visitor::operator()(const list_t& value)
 {
 	if (value.empty()) //TODO
 		return;
-	_data.push_back('\x78' + value.size());
-	for (const auto& element : value)
+
+	push_back<std::int8_t>('\x78' + value.size());
+	for (const value_t& element : value)
 		boost::apply_visitor(*this, element);
 }
 

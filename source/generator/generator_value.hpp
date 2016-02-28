@@ -7,6 +7,8 @@
 
 #pragma once
 
+#include <boost/endian/conversion.hpp>
+
 namespace hessian {
 namespace generator {
 
@@ -26,6 +28,10 @@ public:
 	result_type operator()(const map_t& value);
 	result_type operator()(const object_t& value);
 
+protected:
+	template <typename T>
+	void push_back(const T value);
+
 private:
 	std::string& _data;
 };
@@ -34,6 +40,21 @@ value_visitor::value_visitor(std::string& data)
 :
 	_data(data)
 {
+}
+
+template <>
+void
+value_visitor::push_back(const std::int8_t value)
+{
+	_data.push_back(value);
+}
+
+template <typename T>
+void
+value_visitor::push_back(const T value)
+{
+	const T big = boost::endian::native_to_big(value);
+	_data.append(reinterpret_cast<const char* const>(&big), sizeof(T));
 }
 
 }
