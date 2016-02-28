@@ -17,10 +17,10 @@ value_visitor::operator()(const date_t& value)
 {
 	static const date_t EPOCH(boost::gregorian::date(1970, 1, 1));
 	const boost::posix_time::time_duration duration = value - EPOCH;
-	if (duration.get_rep() % boost::posix_time::minutes(1).get_rep() == 0)
+	if (duration.seconds() == 0 && duration.fractional_seconds() == 0)
 	{
 		push_back<std::int8_t>('K');
-		push_back<std::int32_t>(duration.minutes());
+		push_back<std::int32_t>(duration.total_seconds() / 60);
 	}
 	else
 	{
