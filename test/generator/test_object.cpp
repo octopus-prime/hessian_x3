@@ -10,8 +10,6 @@
 #include <boost/test/data/test_case.hpp>
 #include "../sample.hpp"
 
-#include <boost/algorithm/hex.hpp>
-
 namespace hessian {
 namespace generator {
 
