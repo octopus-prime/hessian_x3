@@ -8,6 +8,7 @@
 #include <hessian/generator.hpp>
 #include "generator/generator_value.hpp"
 #include "generator/generator_ref.hpp"
+#include "generator/generator_def.hpp"
 #include "generator/generator_null.hpp"
 #include "generator/generator_bool.hpp"
 #include "generator/generator_int.hpp"

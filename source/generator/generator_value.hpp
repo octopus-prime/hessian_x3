@@ -14,6 +14,9 @@ namespace generator {
 
 class value_visitor : public boost::static_visitor<>
 {
+	typedef list_t ref_t;
+	typedef std::vector<std::vector<string_t>> def_t;
+
 public:
 	value_visitor(std::string& data);
 	result_type operator()(const null_t& value);
@@ -33,10 +36,12 @@ protected:
 	void push_back(const T value);
 
 	bool ref(const value_t& value);
+	int_t def(const object_t& value);
 
 private:
 	std::string& _data;
-	list_t _ref;
+	ref_t _ref;
+	def_t _def;
 };
 
 inline
