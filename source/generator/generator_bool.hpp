@@ -13,7 +13,7 @@ namespace generator {
 value_visitor::result_type
 value_visitor::operator()(const bool_t& value)
 {
-	constexpr char BOOL[] = {'T', 'F'};
+	constexpr char BOOL[] = {'F', 'T'};
 	push_back<std::int8_t>(BOOL[value]);
 }
 
