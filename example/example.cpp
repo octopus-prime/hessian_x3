@@ -6,7 +6,8 @@
  */
 
 #include "service.hpp"
-#include <boost/date_time.hpp>
+#include <boost/date_time/posix_time/posix_time_io.hpp>
+#include <boost/date_time/posix_time/time_parsers.hpp>
 
 int main()
 {
