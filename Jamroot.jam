@@ -11,30 +11,40 @@ project hessian
 		<define>BOOST_ALL_DYN_LINK
 	;
 
-lib hessian
+lib hessian_serialization
 	:
-		[ glob source/*.cpp ]
+		[ glob source/*.cpp : source/client.cpp ]
+	:
+		<include>/home/mike_gresens/workspace/spirit/include
+	;
+
+lib hessian_client
+	:
+		[ glob source/client.cpp ]
+		hessian_serialization
 		/site-config//cppnetlib-uri
 		/site-config//cppnetlib-client-connections
 		/site-config//boost_thread
 		/site-config//boost_system
 		/site-config//pthread
 	:
-		<include>/home/mike_gresens/workspace/spirit/include
 		<define>BOOST_NETWORK_ENABLE_HTTPS
 	;
 
 exe hessian-example
 	:
 		[ glob example/*.cpp ]
-		hessian
+		hessian_serialization
+		hessian_client
 		/site-config//boost_log
 		/site-config//pthread
 	;
 
 unit-test hessian-test
 	:
-		[ glob test/*.cpp ]
-		hessian
+		[ glob test/test.cpp ]
+		[ glob test/parser/*.cpp ]
+		[ glob test/generator/*.cpp ]
+		hessian_serialization
 		/site-config//boost_unit_test_framework
 	;
