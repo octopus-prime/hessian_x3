@@ -8,15 +8,10 @@
 #include <hessian/parser.hpp>
 #include <boost/test/unit_test.hpp>
 #include <boost/test/data/test_case.hpp>
-#include "sample.hpp"
+#include "../sample.hpp"
 
 namespace hessian {
 namespace parser {
-
-binary_t operator"" _b(const char* s, const size_t l)
-{
-    return binary_t(s, s + l);
-}
 
 const string_t s1023 = make_string_1023();
 const string_t s1024 = make_string_1024();

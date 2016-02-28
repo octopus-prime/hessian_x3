@@ -8,15 +8,10 @@
 #include <hessian/parser.hpp>
 #include <boost/test/unit_test.hpp>
 #include <boost/test/data/test_case.hpp>
-#include "sample.hpp"
+#include "../sample.hpp"
 
 namespace hessian {
 namespace parser {
-
-long_t operator"" _l (const unsigned long long l)
-{
-	return static_cast<long_t>(l);
-}
 
 const success_samples_t success_samples
 {

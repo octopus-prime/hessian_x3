@@ -8,7 +8,7 @@
 #include <hessian/parser.hpp>
 #include <boost/test/unit_test.hpp>
 #include <boost/test/data/test_case.hpp>
-#include "sample.hpp"
+#include "../sample.hpp"
 
 namespace hessian {
 namespace parser {
