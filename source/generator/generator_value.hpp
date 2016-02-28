@@ -39,6 +39,7 @@ private:
 	list_t _ref;
 };
 
+inline
 value_visitor::value_visitor(std::string& data)
 :
 	_data(data)
@@ -46,36 +47,18 @@ value_visitor::value_visitor(std::string& data)
 }
 
 template <>
-void
+inline void
 value_visitor::push_back(const std::int8_t value)
 {
 	_data.push_back(value);
 }
 
 template <typename T>
-void
+inline void
 value_visitor::push_back(const T value)
 {
 	const T big = boost::endian::native_to_big(value);
 	_data.append(reinterpret_cast<const char* const>(&big), sizeof(T));
-}
-
-bool
-value_visitor::ref(const value_t& value)
-{
-	const auto ref = std::find(_ref.begin(), _ref.end(), value);
-	const bool found = ref != _ref.end();
-	if (found)
-	{
-		const int_t position = std::distance(_ref.begin(), ref);
-		push_back<std::int8_t>('Q');
-		(*this)(position);
-	}
-	else
-	{
-		_ref.push_back(value);
-	}
-	return found;
 }
 
 }
