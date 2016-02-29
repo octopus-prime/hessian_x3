@@ -11,10 +11,36 @@ namespace hessian {
 namespace generator {
 
 value_visitor::result_type
-value_visitor::operator()(const string_t& value)
+value_visitor::operator()(const string_t& value) //TODO: UTF-8/16
 {
-	_data.push_back('\x00' + value.size()); //TODO
-	_data.append(value);
+	auto iterator = value.begin();
+
+	while (std::distance(iterator, value.end()) > 0xffff)
+	{
+		push_back<std::int8_t>('R');
+		push_back<std::int16_t>(0xffff);
+		_data.append(iterator, iterator + 0xffff);
+		iterator += 0xffff;
+	}
+
+	const int_t length = std::distance(iterator, value.end());
+
+	if (length <= 31)
+	{
+		push_back<std::int8_t>('\x00' + length);
+	}
+	else if(length <= 1023)
+	{
+		push_back<std::int8_t>('\x30' + (length >> 8));
+		push_back<std::int8_t>(length & 0xff);
+	}
+	else
+	{
+		push_back<std::int8_t>('S');
+		push_back<std::int16_t>(length);
+	}
+
+	_data.append(iterator, value.end());
 }
 
 }

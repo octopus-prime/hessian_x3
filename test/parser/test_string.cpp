@@ -26,6 +26,7 @@ const success_samples_t success_samples
 	{"\x30\x20""01234567890123456789012345678901"s, "01234567890123456789012345678901"s},
 	{"\x33\xff"s + s1023, s1023},
 	{"S\x04\x00"s + s1024, s1024},
+	{"S\xff\xff"s + s65535, s65535},
 	{"R\x80\x00"s + string_t(s65535).insert(32768, "S\x7f\xff"s), s65535},
 	{"R\xff\xff"s + string_t(s65536).insert(65535, 1, '\x01'), s65536},
 
