@@ -35,7 +35,7 @@ int main()
 		std::cout << service->argString_0(service->replyString_0()) << std::endl;
 		std::cout << service->argString_1(service->replyString_1()) << std::endl;
 		std::cout << service->argString_31(service->replyString_31()) << std::endl;
-//		std::cout << service->argString_1023(service->replyString_1023()) << std::endl;
+		std::cout << service->argString_1023(service->replyString_1023()) << std::endl;
 
 		std::cout << service->argBinary_0(service->replyBinary_0()) << std::endl;
 		std::cout << service->argBinary_1(service->replyBinary_1()) << std::endl;
