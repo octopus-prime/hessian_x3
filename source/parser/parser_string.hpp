@@ -39,10 +39,13 @@ struct string_parser : x3::parser<string_parser>
 		{
 			// NOTE: The length means number of UTF16 characters but the content is given in UTF8 characters!
 			u8_u16_iterator<Iterator> iterator(first);
-			std::__advance(iterator, length, std::input_iterator_tag()); //NOTE: std::advance(iterator, length); broken here
+			std::advance(iterator, length);
 
 			const auto saved = first;
 			first = iterator.base().base();
+
+			if (first > last)
+				break;
 
 			x3::traits::append(attr, saved, first);
 

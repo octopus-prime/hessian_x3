@@ -36,7 +36,7 @@ const success_samples_t success_samples
 const failure_samples_t failure_samples
 {
 	"\x00 "s,
-//	"\x01"s, //FIXME
+	"\x01"s,
 	"\x01""12"s,
 	"R\x00\x00"s
 };
