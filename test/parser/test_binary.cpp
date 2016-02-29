@@ -26,6 +26,7 @@ const success_samples_t success_samples
 	{"\x34\x10""0123456789012345"s, "0123456789012345"_b},
 	{"\x37\xff"s + s1023, binary_t(s1023.begin(), s1023.end())},
 	{"B\x04\x00"s + s1024, binary_t(s1024.begin(), s1024.end())},
+	{"B\xff\xff"s + s65535, binary_t(s65535.begin(), s65535.end())},
 	{"A\x80\x00"s + string_t(s65535).insert(32768, "B\x7f\xff"s), binary_t(s65535.begin(), s65535.end())},
 	{"A\xff\xff"s + string_t(s65536).insert(65535, 1, '\x21'), binary_t(s65536.begin(), s65536.end())}
 };
