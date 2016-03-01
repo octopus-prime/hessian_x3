@@ -8,6 +8,21 @@
 #include "service.hpp"
 #include <iostream>
 
+#include <hessian/helper.hpp>
+
+namespace foo {
+
+struct Foo
+{
+	std::int32_t id;
+	std::string name;
+	boost::optional<hessian::date_t> date;
+};
+
+}
+
+DEFINE_GET(foo::Foo, (id)(name)(date));
+
 int main()
 {
 	try
