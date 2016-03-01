@@ -10,6 +10,9 @@
 #include <hessian/helper.hpp>
 #include <boost/log/trivial.hpp>
 
+DEFINE_GET(caucho::Object, (_value));
+DEFINE_SET(caucho::Object, (_value));
+
 DEFINE_GET(caucho::Foo, (id)(name)(date)(keys));
 DEFINE_SET(caucho::Foo, (id)(name)(date)(keys));
 
@@ -130,6 +133,11 @@ public:
 //		return hessian::get<std::result_of_t<decltype(&service_base::replyMap_3)(decltype(this))>>(call("replyUntypedMap_3", {}));
 	}
 
+	virtual std::vector<Object> replyObject_2() override
+	{
+		return hessian::get<std::vector<Object>>(call("replyObject_2a", {}));
+	}
+
 	virtual bool argTrue(const bool arg) override
 	{
 		return hessian::get<bool>(call("argTrue", {hessian::set(arg)}));
@@ -233,6 +241,11 @@ public:
 	virtual bool argMap_3(const std::unordered_map<std::vector<std::string>, std::int32_t>& arg) override
 	{
 		return hessian::get<bool>(call("argUntypedMap_3", {hessian::set(arg)}));
+	}
+
+	virtual bool argObject_2(const std::vector<Object>& arg) override
+	{
+		return hessian::get<bool>(call("argObject_2a", {hessian::set(arg)}));
 	}
 
 	virtual void fault() override

@@ -30,6 +30,11 @@ struct hash<std::vector<std::string>>
 
 namespace caucho {
 
+struct Object
+{
+	std::int32_t _value;
+};
+
 struct Foo
 {
 	std::int32_t id;
@@ -74,6 +79,8 @@ public:
 	virtual std::unordered_map<std::int32_t, std::string> replyMap_2() = 0;
 	virtual std::unordered_map<std::vector<std::string>, std::int32_t> replyMap_3() = 0;
 
+	virtual std::vector<Object> replyObject_2() = 0;
+
 	virtual bool argTrue(const bool arg) = 0;
 	virtual bool argFalse(const bool arg) = 0;
 
@@ -103,6 +110,8 @@ public:
 
 	virtual bool argMap_2(const std::unordered_map<std::int32_t, std::string>& arg) = 0;
 	virtual bool argMap_3(const std::unordered_map<std::vector<std::string>, std::int32_t>& arg) = 0;
+
+	virtual bool argObject_2(const std::vector<Object>& arg) = 0;
 
 	virtual void fault() = 0;
 };

@@ -46,6 +46,8 @@ int main()
 		std::cout << service->argMap_2(service->replyMap_2()) << std::endl;
 		std::cout << service->argMap_3(service->replyMap_3()) << std::endl;
 
+		std::cout << service->argObject_2(service->replyObject_2()) << std::endl;
+
 		service->fault();
 	}
 	catch (const std::exception& exception)
