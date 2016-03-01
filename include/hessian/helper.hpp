@@ -19,82 +19,120 @@ template <typename T>
 inline T
 get(const value_t& value);
 
+template <typename T>
+inline value_t
+set(const T& value);
+
 namespace detail {
 
-struct native_tag;
-struct optional_tag;
-struct list_tag;
-struct object_tag;
+template <typename T> struct is_value : std::false_type { };
+template <> struct is_value<null_t> : std::true_type { };
+template <> struct is_value<bool_t> : std::true_type { };
+template <> struct is_value<int_t> : std::true_type { };
+template <> struct is_value<long_t> : std::true_type { };
+template <> struct is_value<double_t> : std::true_type { };
+template <> struct is_value<date_t> : std::true_type { };
+template <> struct is_value<string_t> : std::true_type { };
+template <> struct is_value<binary_t> : std::true_type { };
 
-template <typename T, typename Tag>
-struct getter;
+template <typename T> struct is_optional : std::false_type { };
+template <typename... Ts> struct is_optional<boost::optional<Ts...> > : std::true_type { };
+
+template <typename T> struct is_list : std::false_type { };
+template <typename... Ts> struct is_list<std::vector<Ts...> > : std::true_type { };
+
+template <typename T> struct is_map : std::false_type { };
+template <typename... Ts> struct is_map<std::unordered_map<Ts...> > : std::true_type { };
+
+template <typename T, typename Enable = void>
+struct converter {};
 
 template <typename T>
-struct getter<T, native_tag>
+struct converter<T, typename std::enable_if_t<is_value<T>::value>>
 {
-	const T& operator()(const value_t& value) const
+	static const T& from(const value_t& value)
 	{
 		return boost::get<T>(value);
+	}
+
+	static value_t to(const T& value)
+	{
+		return value;
 	}
 };
 
 template <typename T>
-struct getter<T, optional_tag>
+struct converter<T, typename std::enable_if_t<is_optional<T>::value>>
 {
-	boost::optional<T> operator()(const value_t& value) const
+	static T from(const value_t& value)
 	{
 		return boost::apply_visitor(optional_visitor(), value);
 	}
 
+	static value_t to(const T& value)
+	{
+		return value ? value_t(value.get()) : value_t(null_t());
+	}
+
 private:
-	struct optional_visitor : boost::static_visitor<boost::optional<T>>
+	struct optional_visitor : boost::static_visitor<T>
 	{
 		template <typename U>
-		boost::optional<T> operator()(const U& value) const
+		T operator()(const U& value) const
 		{
 			throw std::bad_cast();
 		}
 
-		boost::optional<T> operator()(const null_t& value) const
+		T operator()(const null_t& value) const
 		{
-			return boost::optional<T>();
+			return T();
 		}
 
-		boost::optional<T> operator()(const T& value) const
+		T operator()(const T& value) const
 		{
-			return boost::optional<T>(value);
+			return T(value);
 		}
 	};
 };
 
 template <typename T>
-struct getter<T, list_tag>
+struct converter<T, typename std::enable_if_t<is_list<T>::value>>
 {
-	std::vector<T> operator()(const value_t& value) const
+	static T from(const value_t& value)
 	{
-		const list_t& list1 = boost::get<list_t>(value);
-		std::vector<T> list2;
-		std::transform(list1.begin(), list1.end(), std::back_inserter(list2), get<T>);
-		return std::move(list2);
+		T list;
+		for (const auto& element : boost::get<list_t>(value))
+			list.push_back(get<typename T::value_type>(element));
+		return std::move(list);
+	}
+
+	static value_t to(const T& value)
+	{
+		list_t list;
+		for (const auto& element : value)
+			list.push_back(set(element));
+		return std::move(list);
 	}
 };
 
 template <typename T>
-struct getter_traits
+struct converter<T, typename std::enable_if_t<is_map<T>::value>>
 {
-	typedef getter<T, native_tag> type;
-};
+	static T from(const value_t& value)
+	{
+		T map;
+		for (const auto& element : boost::get<map_t>(value))
+			map.emplace(get<typename T::key_type>(element.first), get<typename T::mapped_type>(element.second));
+		return std::move(map);
+	}
 
-template <typename T>
-struct getter_traits<boost::optional<T>>
-{
-	typedef getter<T, optional_tag> type;
-};
-
-template <typename T>
-struct getter_traits<std::vector<T>>
-{
-	typedef getter<T, list_tag> type;
+	static value_t to(const T& value)
+	{
+		map_t map;
+		for (const auto& element : value)
+			map.emplace(set(element.first), set(element.second));
+		return std::move(map);
+	}
 };
 
 }
@@ -103,192 +141,14 @@ template <typename T>
 inline T
 get(const value_t& value)
 {
-	typedef typename detail::getter_traits<T>::type getter;
-	return getter()(value);
+	return detail::converter<T>::from(value);
 }
 
-/*
 template <typename T>
-T
-get(const value_t& value);
-
-template <>
-inline null_t
-get(const value_t& value)
-{
-	return boost::get<null_t>(value);
-}
-
-template <>
-inline bool_t
-get(const value_t& value)
-{
-	return boost::get<bool_t>(value);
-}
-
-template <>
-inline int_t
-get(const value_t& value)
-{
-	return boost::get<int_t>(value);
-}
-
-template <>
-inline long_t
-get(const value_t& value)
-{
-	return boost::get<long_t>(value);
-}
-
-template <>
-inline double_t
-get(const value_t& value)
-{
-	return boost::get<double_t>(value);
-}
-
-template <>
-inline date_t
-get(const value_t& value)
-{
-	return boost::get<date_t>(value);
-}
-
-template <>
-inline string_t
-get(const value_t& value)
-{
-	return boost::get<string_t>(value);
-}
-
-template <>
-inline binary_t
-get(const value_t& value)
-{
-	return boost::get<binary_t>(value);
-}
-
-template <>
-inline list_t
-get(const value_t& value)
-{
-	return boost::get<list_t>(value);
-}
-
-template <>
-inline map_t
-get(const value_t& value)
-{
-	return boost::get<map_t>(value);
-}
-
-template <>
-inline object_t
-get(const value_t& value)
-{
-	return boost::get<object_t>(value);
-}
-
-template <>
-inline boost::optional<bool_t>
-get(const value_t& value)
-{
-	return boost::apply_visitor(optional_visitor<bool_t>(), value);
-}
-
-template <>
-inline boost::optional<int_t>
-get(const value_t& value)
-{
-	return boost::apply_visitor(optional_visitor<int_t>(), value);
-}
-
-template <>
-inline boost::optional<long_t>
-get(const value_t& value)
-{
-	return boost::apply_visitor(optional_visitor<long_t>(), value);
-}
-
-template <>
-inline boost::optional<double_t>
-get(const value_t& value)
-{
-	return boost::apply_visitor(optional_visitor<double_t>(), value);
-}
-
-template <>
-inline boost::optional<date_t>
-get(const value_t& value)
-{
-	return boost::apply_visitor(optional_visitor<date_t>(), value);
-}
-
-template <>
-inline boost::optional<string_t>
-get(const value_t& value)
-{
-	return boost::apply_visitor(optional_visitor<string_t>(), value);
-}
-
-template <>
-inline boost::optional<binary_t>
-get(const value_t& value)
-{
-	return boost::apply_visitor(optional_visitor<binary_t>(), value);
-}
-
-template <>
-inline boost::optional<list_t>
-get(const value_t& value)
-{
-	return boost::apply_visitor(optional_visitor<list_t>(), value);
-}
-
-template <>
-inline boost::optional<map_t>
-get(const value_t& value)
-{
-	return boost::apply_visitor(optional_visitor<map_t>(), value);
-}
-
-template <>
-inline boost::optional<object_t>
-get(const value_t& value)
-{
-	return boost::apply_visitor(optional_visitor<object_t>(), value);
-}
-*/
-template <typename T>
-value_t
-set(const T& value);
-
-template <>
 inline value_t
-set(const bool& value)
+set(const T& value)
 {
-	return value;
-}
-
-template <>
-inline value_t
-set(const std::int32_t& value)
-{
-	return value;
-}
-
-template <>
-inline value_t
-set(const std::string& value)
-{
-	return value;
-}
-
-template <>
-inline value_t
-set(const boost::optional<std::string>& value)
-{
-	return value ? value_t(value.get()) : value_t(null_t());
+	return detail::converter<T>::to(value);
 }
 
 }
@@ -302,7 +162,7 @@ template <> \
 STRUCT_NAME \
 get<STRUCT_NAME>(const value_t& value) \
 { \
-	const object_t& object = get<object_t>(value); \
+	const object_t& object = boost::get<object_t>(value); \
 	return STRUCT_NAME \
 	{ \
 		BOOST_PP_SEQ_FOR_EACH_I(GET, STRUCT_NAME, SEQ) \
@@ -311,7 +171,7 @@ get<STRUCT_NAME>(const value_t& value) \
 }
 
 #define SET(r, type, i, member) BOOST_PP_COMMA_IF(i) \
-{BOOST_PP_STRINGIZE(member), value.member}
+{BOOST_PP_STRINGIZE(member), set(value.member)}
 
 #define DEFINE_SET(STRUCT_NAME, SEQ) \
 namespace hessian { \

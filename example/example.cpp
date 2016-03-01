@@ -8,21 +8,6 @@
 #include "service.hpp"
 #include <iostream>
 
-#include <hessian/helper.hpp>
-
-namespace foo {
-
-struct Foo
-{
-	std::int32_t id;
-	std::string name;
-	boost::optional<hessian::date_t> date;
-};
-
-}
-
-DEFINE_GET(foo::Foo, (id)(name)(date));
-
 int main()
 {
 	try
@@ -51,9 +36,15 @@ int main()
 		std::cout << service->argString_1(service->replyString_1()) << std::endl;
 		std::cout << service->argString_31(service->replyString_31()) << std::endl;
 		std::cout << service->argString_1023(service->replyString_1023()) << std::endl;
+		std::cout << service->argString_null(service->replyString_null()) << std::endl;
 
 		std::cout << service->argBinary_0(service->replyBinary_0()) << std::endl;
 		std::cout << service->argBinary_1(service->replyBinary_1()) << std::endl;
+
+		std::cout << service->argList_7(service->replyList_7()) << std::endl;
+
+		std::cout << service->argMap_2(service->replyMap_2()) << std::endl;
+		std::cout << service->argMap_3(service->replyMap_3()) << std::endl;
 
 		service->fault();
 	}
