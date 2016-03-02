@@ -59,7 +59,8 @@ public:
 	client_impl(const std::string& host)
 	:
 		_url(host),
-		_client(http::client::options().cache_resolved(true))
+		_client(http::client::options().cache_resolved(true)),
+		_cookies()
 	{
 	}
 
@@ -70,8 +71,14 @@ public:
 
 		const string_t call = generate(method, arguments);
 
-		const http::client::request request(url);
+		http::client::request request(url);
+		request << header("Cookie", _cookies);
+
 		const http::client::response response = _client.post(request, call);
+
+		for (const auto& header : headers(response))
+			if (header.first == "Set-Cookie")
+				_cookies = header.second;
 
 		const content_t content = parse(body(response));
 		return boost::apply_visitor(content_visitor(), content);
@@ -80,6 +87,7 @@ public:
 private:
 	uri::uri _url;
 	http::client _client;
+	std::string _cookies;
 };
 
 client_t
