@@ -62,6 +62,20 @@ struct converter<T, typename std::enable_if_t<is_value<T>::value>>
 };
 
 template <typename T>
+struct converter<T, typename std::enable_if_t<std::is_enum<T>::value>>
+{
+	static T from(const value_t& value)
+	{
+		return static_cast<T>(boost::get<std::int32_t>(value));
+	}
+
+	static value_t to(const T& value)
+	{
+		return static_cast<std::int32_t>(value);
+	}
+};
+
+template <typename T>
 struct converter<T, typename std::enable_if_t<is_optional<T>::value>>
 {
 	static T from(const value_t& value)
