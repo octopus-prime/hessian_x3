@@ -76,6 +76,9 @@ public:
 
 		const http::client::response response = _client.post(request, call);
 
+		if (status(response) != http::response_code<void>::RC_OK)
+			throw std::runtime_error(status_message(response));
+
 		for (const auto& header : headers(response))
 			if (header.first == "Set-Cookie")
 				_cookies = header.second;
