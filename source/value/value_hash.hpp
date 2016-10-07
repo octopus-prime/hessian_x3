@@ -8,6 +8,23 @@
 #pragma once
 
 #include <boost/variant/detail/hash_variant.hpp>
+
+namespace boost {
+
+size_t
+hash_value(const hessian::null_t& value);
+
+size_t
+hash_value(const hessian::date_t& value);
+
+size_t
+hash_value(const hessian::map_t& value);
+
+size_t
+hash_value(const hessian::object_t& value);
+
+}
+
 #include <boost/functional/hash.hpp>
 
 namespace boost {
@@ -17,6 +34,7 @@ hash_value(const hessian::null_t& value)
 {
 	return 0xAAAAAAAAAAAAAAAA;
 }
+
 
 size_t
 hash_value(const hessian::date_t& value)
@@ -30,13 +48,13 @@ hash_value(const hessian::date_t& value)
 size_t
 hash_value(const hessian::map_t& value)
 {
-	return boost::hash_range(value.begin(), value.end());
+	return hash_range(value.begin(), value.end());
 }
 
 size_t
 hash_value(const hessian::object_t& value)
 {
-	return boost::hash_range(value.begin(), value.end());
+	return hash_range(value.begin(), value.end());
 }
 
 }
