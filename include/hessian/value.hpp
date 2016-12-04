@@ -14,6 +14,7 @@
 #include <string>
 #include <vector>
 #include <unordered_map>
+//#include <functional>
 #include <iostream>
 
 namespace hessian {
@@ -29,6 +30,15 @@ typedef boost::posix_time::ptime date_t;
 typedef std::string string_t;
 typedef std::basic_string<std::uint8_t> binary_t;
 
+template <typename T>
+using basic_list_t = std::vector<T>;
+
+template <typename T>
+using basic_map_t = std::unordered_map<T, T, hash>;
+
+template <typename T>
+using basic_object_t = std::unordered_map<string_t, T>;
+
 typedef boost::make_recursive_variant
 <
 	null_t,
@@ -39,20 +49,25 @@ typedef boost::make_recursive_variant
 	date_t,
 	string_t,
 	binary_t,
-	std::vector<boost::recursive_variant_>,											// list_t
-	std::unordered_map<boost::recursive_variant_, boost::recursive_variant_, hash>,	// map_t
-	std::unordered_map<string_t, boost::recursive_variant_>							// object_t
+	basic_list_t<boost::recursive_variant_>,
+	basic_map_t<boost::recursive_variant_>,
+	basic_object_t<boost::recursive_variant_>
 >::type value_t;
+
+typedef basic_list_t<value_t> list_t;
+typedef basic_map_t<value_t> map_t;
+typedef basic_object_t<value_t> object_t;
 
 struct hash
 {
-	size_t operator()(const value_t& value) const;
+	size_t operator()(const value_t& value) const noexcept;
 };
-
-typedef std::vector<value_t> list_t;
-typedef std::unordered_map<value_t, value_t, hash> map_t;
-typedef std::unordered_map<string_t, value_t> object_t;
 
 std::ostream& operator<<(std::ostream& stream, const value_t& value);
 
+}
+
+namespace std {
+	template <>
+	struct __is_fast_hash<hessian::hash> : std::false_type { };
 }

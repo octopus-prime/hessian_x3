@@ -12,7 +12,7 @@
 namespace hessian {
 
 size_t
-hash::operator()(const value_t& value) const
+hash::operator()(const value_t& value) const noexcept
 {
 	return boost::hash_value(value);
 }
