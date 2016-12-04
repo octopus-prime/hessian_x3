@@ -1,12 +1,8 @@
-import os ;
-
-using clang : : [ os.environ CXX ] ;
 using testing ;
 
 project hessian
 	:
 		requirements
-		<cxxflags>-std=c++14
 		<include>include
 		<define>BOOST_ALL_DYN_LINK
 	;
@@ -14,21 +10,13 @@ project hessian
 lib hessian_serialization
 	:
 		[ glob source/*.cpp : source/client.cpp ]
-	:
-		<include>/home/mike_gresens/workspace/spirit/include
 	;
 
 lib hessian_client
 	:
 		[ glob source/client.cpp ]
 		hessian_serialization
-		/site-config//cppnetlib-uri
-		/site-config//cppnetlib-client-connections
-		/site-config//boost_thread
-		/site-config//boost_system
-		/site-config//pthread
-	:
-		<define>BOOST_NETWORK_ENABLE_HTTPS
+		/site-config//curl
 	;
 
 exe hessian-example

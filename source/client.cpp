@@ -8,10 +8,9 @@
 #include <hessian/client.hpp>
 #include <hessian/parser.hpp>
 #include <hessian/generator.hpp>
-#include <boost/network.hpp>
+#include <curl/curl.h>
 
 using namespace std::literals;
-using namespace boost::network;
 
 namespace hessian {
 
@@ -59,38 +58,75 @@ public:
 	client_impl(const std::string& host)
 	:
 		_url(host),
-		_client(http::client::options().cache_resolved(true)),
-		_cookies()
+		_client(curl_easy_init(), curl_easy_cleanup),
+		_header(curl_slist_append(nullptr, "Content-Type: x-application/hessian"), curl_slist_free_all)
 	{
+//		set_option(CURLOPT_VERBOSE, 1L);
+		set_option(CURLOPT_POST, 1L);
+		set_option(CURLOPT_WRITEFUNCTION, write);
+		set_option(CURLOPT_USERAGENT, "libhessian/1.0");
+		set_option(CURLOPT_HTTPHEADER, _header.get());
 	}
 
 	virtual value_t call(const string_t& service, const string_t& method, const list_t& arguments) override
 	{
-		uri::uri url(_url);
-		url << uri::path(service);
-
+		const string_t url = _url + service;
 		const string_t call = generate(method, arguments);
+		std::ostringstream output;
 
-		http::client::request request(url);
-		request << header("Cookie", _cookies);
+		set_option(CURLOPT_URL, url.c_str());
+		set_option(CURLOPT_POSTFIELDS, call.data());
+		set_option(CURLOPT_POSTFIELDSIZE, call.size());
+		set_option(CURLOPT_WRITEDATA, &output);
 
-		const http::client::response response = _client.post(request, call);
+		const auto result = perform();
 
-		if (status(response) != http::response_code<void>::RC_OK)
-			throw std::runtime_error(status_message(response));
+		if (result != 200)
+			throw std::runtime_error(std::to_string(result) + " " + __func__);
 
-		for (const auto& header : headers(response))
-			if (header.first == "Set-Cookie")
-				_cookies = header.second;
-
-		const content_t content = parse(body(response));
+		const content_t content = parse(output.str());
 		return boost::apply_visitor(content_visitor(), content);
 	}
 
+protected:
+	template <typename T>
+	void
+	set_option(const CURLoption key, const T value) const
+	{
+		const CURLcode code = curl_easy_setopt(_client.get(), key, value);
+		if (code != CURLE_OK)
+			throw std::runtime_error(std::to_string(code) + " " + __func__);
+	}
+
+	long
+	perform() const
+	{
+		CURLcode code = curl_easy_perform(_client.get());
+
+		if (code != CURLE_OK)
+			throw std::runtime_error(std::to_string(code) + " " + __func__);
+
+		long result;
+
+		code = curl_easy_getinfo(_client.get(), CURLINFO_RESPONSE_CODE, &result);
+		if (code != CURLE_OK)
+			throw std::runtime_error(std::to_string(code) + " " + __func__);
+
+		return result;
+	}
+
+	static size_t
+	write(char *buffer, size_t size, size_t nitems, void *outstream)
+	{
+		const size_t length = size * nitems;
+		reinterpret_cast<std::ostream*>(outstream)->write(buffer, length);
+		return length;
+	}
+
 private:
-	uri::uri _url;
-	http::client _client;
-	std::string _cookies;
+	std::string _url;
+	std::shared_ptr<CURL> _client;
+	std::shared_ptr<curl_slist> _header;
 };
 
 client_t
@@ -100,3 +136,4 @@ make_client(const std::string& host)
 }
 
 }
+
