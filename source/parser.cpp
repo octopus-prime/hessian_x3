@@ -49,7 +49,7 @@ parse(const std::string& data)
 	if (!ok || begin != end)
 		throw parse_exception_impl();
 
-	return std::move(content);
+	return content;
 }
 
 }

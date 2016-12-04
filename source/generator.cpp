@@ -45,7 +45,7 @@ generate(const string_t& method, const list_t& arguments)
 	for (const auto& argument : arguments)
 		boost::apply_visitor(visitor, argument);
 
-	return std::move(call);
+	return call;
 }
 
 }

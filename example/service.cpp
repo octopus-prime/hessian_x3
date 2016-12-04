@@ -259,7 +259,7 @@ protected:
 		BOOST_LOG_TRIVIAL(info) << "Call " << method;
 		const hessian::value_t value = _client->call("/test/test2", method, arguments);
 		BOOST_LOG_TRIVIAL(info) << "Got " << value;
-		return std::move(value);
+		return value;
 	}
 
 private:
