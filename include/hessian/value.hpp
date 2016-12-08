@@ -63,9 +63,11 @@ std::ostream& operator<<(std::ostream& stream, const value_t& value);
 
 }
 
+#ifndef _LIBCPP_VERSION
 namespace std {
 
 	template <>
 	struct __is_fast_hash<hessian::hash> : std::false_type { };
 
 }
+#endif
