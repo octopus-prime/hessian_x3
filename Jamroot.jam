@@ -18,6 +18,8 @@ lib hessian_client
 		[ glob source/client.cpp ]
 		hessian_serialization
 		/site-config//curl
+		/site-config//boost_thread
+		/site-config//boost_system
 	;
 
 exe hessian-example
