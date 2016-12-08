@@ -56,20 +56,18 @@ struct content_visitor : boost::static_visitor<const value_t&>
 
 class client_impl : public virtual client_base
 {
-	class post
+	class request
 	{
 	public:
-		post(const std::shared_ptr<CURLSH>& handle)
+		request(const std::shared_ptr<CURLSH>& handle)
 		:
 			_error{{0}},
 			_handle(curl_easy_init(), curl_easy_cleanup)
 		{
 			set_option(CURLOPT_SHARE, handle.get());
 			set_option(CURLOPT_ERRORBUFFER, _error.data());
-			set_option(CURLOPT_POST, 1L);
 			set_option(CURLOPT_WRITEFUNCTION, write);
 			set_option(CURLOPT_USERAGENT, "libhessian/1.0");
-			set_option(CURLOPT_HTTPHEADER, HEADER.get());
 			set_option(CURLOPT_VERBOSE, 0L);
 		}
 
@@ -79,9 +77,11 @@ class client_impl : public virtual client_base
 			std::ostringstream output;
 
 			set_option(CURLOPT_URL, url.c_str());
+			set_option(CURLOPT_POST, 1L);
 			set_option(CURLOPT_POSTFIELDS, call.data());
 			set_option(CURLOPT_POSTFIELDSIZE, call.size());
 			set_option(CURLOPT_WRITEDATA, &output);
+			set_option(CURLOPT_HTTPHEADER, HEADER.get());
 
 			const auto result = perform();
 
@@ -89,6 +89,27 @@ class client_impl : public virtual client_base
 				throw std::runtime_error(std::to_string(result) + " " + __func__);
 
 			return output.str();
+		}
+
+		bool
+		operator()(const string_t& url) const
+		{
+			std::ostringstream ignore;
+
+			set_option(CURLOPT_URL, url.c_str());
+			set_option(CURLOPT_HTTPGET, 1L);
+		#if _WIN32
+			set_option(CURLOPT_HTTPAUTH, CURLAUTH_NEGOTIATE);
+		#else
+			set_option(CURLOPT_HTTPAUTH, CURLAUTH_GSSNEGOTIATE);
+		#endif
+			set_option(CURLOPT_USERNAME, "");
+			set_option(CURLOPT_PASSWORD, "");
+			set_option(CURLOPT_WRITEDATA, &ignore);
+
+			const auto result = perform();
+
+			return result == 200;
 		}
 
 	protected:
@@ -140,9 +161,9 @@ class client_impl : public virtual client_base
 };
 
 public:
-	client_impl(const std::string& host)
+	client_impl(const std::string& url)
 	:
-		_url(host),
+		_url(url),
 		_mutex_cookie(),
 		_mutex_dns(),
 		_mutex_ssl(),
@@ -163,11 +184,18 @@ public:
 		const string_t url = _url + service;
 		const string_t call = generate(method, arguments);
 
-		const post request(_handle);
-		const std::string result = request(url, call);
+		const request perform(_handle);
+		const std::string result = perform(url, call);
 
 		const content_t content = parse(result);
 		return boost::apply_visitor(content_visitor(), content);
+	}
+
+	virtual bool negotiate(const string_t& resource) override
+	{
+		const string_t url = _url + resource;
+		const request perform(_handle);
+		return perform(url);
 	}
 
 protected:
@@ -250,12 +278,12 @@ private:
 };
 
 const std::shared_ptr<curl_slist>
-client_impl::post::HEADER(curl_slist_append(nullptr, "Content-Type: x-application/hessian"), curl_slist_free_all);
+client_impl::request::HEADER(curl_slist_append(nullptr, "Content-Type: x-application/hessian"), curl_slist_free_all);
 
 client_t
-make_client(const std::string& host)
+make_client(const std::string& url)
 {
-	return std::make_shared<client_impl>(host);
+	return std::make_shared<client_impl>(url);
 }
 
 }
