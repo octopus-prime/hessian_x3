@@ -13,7 +13,7 @@ matrix:
     env:
     install: sudo apt-get install -qq -y docker; docker pull ubuntu:16.10
     os: linux
-    script: docker images; docker run -it --rm --name hessian_x3 ubuntu:16.10; sleep 10; docker exec hessian_x3 gcc --version
+    script: docker images; docker run -it -d --name hessian_x3 ubuntu:16.10; sleep 10; docker exec hessian_x3 gcc --version
 services:
 - docker
 sudo: required
