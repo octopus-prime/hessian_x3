@@ -11,7 +11,7 @@ matrix:
   include:
   - compiler: gcc
     env:
-    install: sudo apt-get install -qq -y docker
+    install: sudo apt-get install -qq -y docker; docker pull ubuntu:16.10
     os: linux
     script: docker images
 services:
