@@ -7,7 +7,7 @@ Implements hessian client using curl
 
 @               | Build         | Tests coverage | More info
 ----------------|-------------- | -------------- |-----------
-Master branch:  | [![Build Status](https://travis-ci.org/octopus-prime/hessian_x3.svg?branch=master)](https://travis-ci.org/octopus-prime/hessian_x3) | [![Coverage Status](https://coveralls.io/repos/octopus-prime/hessian_x3/badge.png?branch=master)](https://coveralls.io/r/octopus-prime/hessian_x3?branch=master)
+Master branch:  | [![Build Status](https://travis-ci.org/octopus-prime/hessian_x3.svg?branch=master)](https://travis-ci.org/octopus-prime/hessian_x3) | [![Coverage Status](https://coveralls.io/repos/github/octopus-prime/hessian_x3/badge.svg?branch=master)](https://coveralls.io/github/octopus-prime/hessian_x3?branch=master)
 
 ### License
 
