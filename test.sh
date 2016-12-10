@@ -4,4 +4,4 @@ docker exec hessian_x3 mkdir hessian_x3
 docker cp . hessian_x3:/hessian_x3
 docker exec hessian_x3 bash -c "
 	cd hessian_x3; 
-	bjam toolset=gcc release -j2"
+	bjam toolset=$1 release -j2"

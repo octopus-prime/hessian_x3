@@ -6,14 +6,15 @@ branches:
   - master
 dist: trusty
 language: cpp
+install:
+  - sudo apt-get install -qq -y docker
+  - pip install --user cpp-coveralls
 matrix:
   fast_finish: true
   include:
   - compiler: gcc
-    env:
-    install: sudo apt-get install -qq -y docker
     os: linux
-    script: ./test.sh
+    script: ./test.sh gcc
 services:
 - docker
 sudo: required
