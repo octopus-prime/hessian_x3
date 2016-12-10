@@ -7,13 +7,15 @@ branches:
 dist: trusty
 language: cpp
 install:
-  - pip install --user cpp-coveralls
+- pip install --user cpp-coveralls
 matrix:
   fast_finish: true
   include:
   - compiler: gcc
     os: linux
-    script: ./test.sh gcc
+    script: ./test.sh gcc `nproc --all`
 services:
 - docker
 sudo: required
+after_success:
+- coveralls --exclude example --exclude test --gcov-options '\-lp'
