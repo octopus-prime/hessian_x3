@@ -7,7 +7,6 @@ branches:
 dist: trusty
 language: cpp
 install:
-  - sudo apt-get install -qq -y docker
   - pip install --user cpp-coveralls
 matrix:
   fast_finish: true
