@@ -1,5 +1,5 @@
 /*
- * test_bool.cpp
+ * test_int.cpp
  *
  *  Created on: 12.12.2016
  *      Author: mgresens
@@ -13,25 +13,25 @@
 
 namespace hessian {
 
-typedef mpl::remove<all_types, bool_t>::type other_types;
+typedef mpl::remove<all_types, int_t>::type other_types;
 
-BOOST_AUTO_TEST_SUITE(test_bool)
+BOOST_AUTO_TEST_SUITE(test_int)
 
 BOOST_AUTO_TEST_CASE(test_get_success)
 {
-	value_t value = bool_t();
-	BOOST_CHECK_NO_THROW(boost::get<bool_t>(value));
+	value_t value = int_t();
+	BOOST_CHECK_NO_THROW(boost::get<int_t>(value));
 }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(test_get_failure, type, other_types)
 {
 	value_t value = type();
-	BOOST_CHECK_THROW(boost::get<bool_t>(value), std::exception);
+	BOOST_CHECK_THROW(boost::get<int_t>(value), std::exception);
 }
 
 BOOST_AUTO_TEST_CASE(test_hash_type)
 {
-	value_t value = bool_t();
+	value_t value = int_t();
 	hash hash;
 	BOOST_CHECK_EQUAL(hash(value), hash(value));
 }
@@ -40,26 +40,25 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(test_hash_types, type, other_types)
 {
 	value_t value = type();
 	hash hash;
-	BOOST_CHECK_NE(hash(bool_t()), hash(value));
+	BOOST_CHECK_NE(hash(int_t()), hash(value));
 }
 
 BOOST_AUTO_TEST_CASE(test_hash_values)
 {
-	value_t value = bool_t(true);
 	hash hash;
-	BOOST_CHECK_NE(hash(bool_t(true)), hash(bool_t(false)));
+	BOOST_CHECK_NE(hash(int_t(0)), hash(int_t(1)));
 }
 
 const std::initializer_list<value_t> values =
 {
-	false,
-	true
+	int_t(0),
+	int_t(1)
 };
 
 const std::initializer_list<string_t> strings =
 {
-	"bool(false)",
-	"bool(true)"
+	"int(0)",
+	"int(1)"
 };
 
 BOOST_DATA_TEST_CASE(test_output, values ^ strings, value, string)
