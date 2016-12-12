@@ -18,4 +18,4 @@ services:
 - docker
 sudo: required
 after_success:
-- coveralls -e bin/gcc-6.2.0/debug/example -e bin/gcc-6.2.0/debug/test -E '.*/example/*.?pp' --gcov-options '\-lp'
+- coveralls -e example -e test -e /usr/include --gcov-options '\-lp'
