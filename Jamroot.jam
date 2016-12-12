@@ -37,6 +37,7 @@ exe hessian-example
 unit-test hessian-test
 	:
 		[ glob test/test.cpp ]
+		[ glob test/value/*.cpp ]
 		[ glob test/parser/*.cpp ]
 		[ glob test/generator/*.cpp ]
 		hessian_serialization
