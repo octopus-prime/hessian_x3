@@ -30,7 +30,11 @@ const std::initializer_list<string_t> strings =
 {
 	"object()",
 	"object(string('foo') = null)",
+#ifndef _LIBCPP_VERSION
+	"object(string('bar') = null, string('foo') = null)"
+#else
 	"object(string('foo') = null, string('bar') = null)"
+#endif
 };
 
 #include "test.hpp"

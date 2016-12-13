@@ -30,7 +30,11 @@ const std::initializer_list<string_t> strings =
 {
 	"map()",
 	"map(null = null)",
+#ifndef _LIBCPP_VERSION
+	"map(bool(false) = null, bool(true) = null)"
+#else
 	"map(bool(true) = null, bool(false) = null)"
+#endif
 };
 
 #include "test.hpp"
