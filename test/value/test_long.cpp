@@ -1,7 +1,7 @@
 /*
- * test_null.cpp
+ * test_long.cpp
  *
- *  Created on: 12.12.2016
+ *  Created on: 13.12.2016
  *      Author: mgresens
  */
 
@@ -13,19 +13,23 @@
 
 namespace hessian {
 
-BOOST_AUTO_TEST_SUITE(test_null)
+BOOST_AUTO_TEST_SUITE(test_long)
 
-typedef null_t this_type;
+typedef long_t this_type;
 typedef mpl::remove<all_types, this_type>::type other_types;
 
 const std::initializer_list<value_t> values =
 {
-	this_type()
+	this_type(0),
+	this_type(1),
+	this_type(-1)
 };
 
 const std::initializer_list<string_t> strings =
 {
-	"null"
+	"long(0)",
+	"long(1)",
+	"long(-1)"
 };
 
 #include "test.hpp"
