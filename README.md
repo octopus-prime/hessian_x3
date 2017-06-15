@@ -1,7 +1,7 @@
 # hessian_x3
 
 Implements hessian serialization 2.0 using boost spirit x3<br>
-Implements hessian client using curl
+Implements hessian client using beast http
 
 ### Test results
 
