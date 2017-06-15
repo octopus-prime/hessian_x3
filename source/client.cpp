@@ -59,24 +59,25 @@ class client_impl : public virtual client_base
 public:
     client_impl(const string_t& host, const string_t& port)
     :
-        _host(host),
         _service(),
         _socket(_service),
-		_buffer()
+		_buffer(),
+		_header()
     {
         boost::asio::ip::tcp::resolver resolver{_service};
         boost::asio::ip::tcp::resolver::query query{host, port};
         boost::asio::connect(_socket, resolver.resolve(query));
+
+        _header.method(beast::http::verb::post);
+        _header.insert(beast::http::field::host, host);
+        _header.insert(beast::http::field::user_agent, "libhessian/1.0");
+        _header.insert(beast::http::field::content_type, "x-application/hessian");
     }
 
     virtual value_t call(const string_t& service, const string_t& method, const list_t& arguments) override
     {
-        beast::http::request<beast::http::string_body> request;
-        request.method(beast::http::verb::post);
+        beast::http::request<beast::http::string_body> request(_header);
         request.target(service);
-        request.insert(beast::http::field::host, _host);
-        request.insert(beast::http::field::user_agent, "libhessian/1.0");
-        request.insert(beast::http::field::content_type, "x-application/hessian");
         request.body = generate(method, arguments);
         request.prepare();
         beast::http::write(_socket, request);
@@ -89,10 +90,10 @@ public:
     }
 
 private:
-    string_t _host;
     boost::asio::io_service _service;
     boost::asio::ip::tcp::socket _socket;
     beast::flat_buffer _buffer;
+    beast::http::request<beast::http::string_body>::header _header;
 };
 
 client_t
