@@ -26,11 +26,10 @@ protected:
 
 public:
 	virtual value_t call(const string_t& service, const string_t& method, const list_t& arguments) = 0;
-	virtual bool negotiate(const string_t& resource) = 0;
 };
 
 typedef std::shared_ptr<client_base> client_t;
 
-client_t make_client(const string_t& url);
+client_t make_client(const string_t& host, const string_t& port);
 
 }

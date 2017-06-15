@@ -3,8 +3,8 @@ using testing ;
 project hessian
 	:
 		requirements
-		<cxxflags>-std=c++14
 		<include>include
+		<include>/home/mike/workspace/Beast/include
 		<define>BOOST_ALL_DYN_LINK
 		<variant>debug:<cxxflags>--coverage
 		<variant>debug:<linkflags>--coverage
@@ -20,19 +20,17 @@ lib hessian_client
 	:
 		[ glob source/client.cpp ]
 		hessian_serialization
-		/site-config//curl
-		/site-config//boost_thread
 		/site-config//boost_system
 	;
 
 exe hessian-example
-	:
-		[ glob example/*.cpp ]
-		hessian_serialization
-		hessian_client
-		/site-config//boost_log
-		/site-config//pthread
-	;
+    :
+        [ glob example/*.cpp : example/bad_chunk.cpp ]
+        hessian_serialization
+        hessian_client
+        /site-config//boost_log
+        /site-config//pthread
+    ;
 
 unit-test hessian-test
 	:

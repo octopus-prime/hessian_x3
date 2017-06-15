@@ -267,9 +267,9 @@ private:
 };
 
 service_t
-make_service(const std::string& host)
+make_service(const std::string& host, const std::string& port)
 {
-	const hessian::client_t client = hessian::make_client(host);
+	const hessian::client_t client = hessian::make_client(host, port);
 	return std::make_shared<service_impl>(client);
 }
 

@@ -8,9 +8,9 @@
 #include <hessian/client.hpp>
 #include <hessian/parser.hpp>
 #include <hessian/generator.hpp>
-#include <curl/curl.h>
-#include <array>
-#include <boost/thread/shared_mutex.hpp>
+#include <beast/core.hpp>
+#include <beast/http.hpp>
+#include <boost/asio.hpp>
 
 using namespace std::literals;
 
@@ -19,271 +19,86 @@ namespace hessian {
 class fault_exception_impl : public virtual fault_exception
 {
 public:
-	fault_exception_impl(const fault_t& fault)
-	:
-		_fault(fault),
-		_what(boost::get<string_t>(_fault.at("message"s)))
-	{
-	}
+    fault_exception_impl(const fault_t& fault)
+    :
+        _fault(fault),
+        _what(boost::get<string_t>(_fault.at("message"s)))
+    {
+    }
 
-	virtual const char* what() const noexcept override
-	{
-		return _what.c_str();
-	}
+    virtual const char* what() const noexcept override
+    {
+        return _what.c_str();
+    }
 
-	virtual const map_t& fault() const noexcept override
-	{
-		return _fault;
-	}
+    virtual const map_t& fault() const noexcept override
+    {
+        return _fault;
+    }
 
 private:
-	fault_t _fault;
-	string_t _what;
+    fault_t _fault;
+    string_t _what;
 };
 
 struct content_visitor : boost::static_visitor<const value_t&>
 {
-	result_type operator()(const reply_t& content) const
-	{
-		return content;
-	}
+    result_type operator()(const reply_t& content) const
+    {
+        return content;
+    }
 
-	result_type operator()(const fault_t& content) const
-	{
-		throw fault_exception_impl(content);
-	}
+    result_type operator()(const fault_t& content) const
+    {
+        throw fault_exception_impl(content);
+    }
 };
 
 class client_impl : public virtual client_base
 {
-	class request
-	{
-	public:
-		request(const std::shared_ptr<CURLSH>& handle)
-		:
-			_error{{0}},
-			_handle(curl_easy_init(), curl_easy_cleanup)
-		{
-			set_option(CURLOPT_SHARE, handle.get());
-			set_option(CURLOPT_ERRORBUFFER, _error.data());
-			set_option(CURLOPT_WRITEFUNCTION, write);
-			set_option(CURLOPT_USERAGENT, "libhessian/1.0");
-			set_option(CURLOPT_VERBOSE, 0L);
-		}
-
-		std::string
-		operator()(const string_t& url, const string_t& call) const
-		{
-			std::ostringstream output;
-
-			set_option(CURLOPT_URL, url.c_str());
-			set_option(CURLOPT_POST, 1L);
-			set_option(CURLOPT_POSTFIELDS, call.data());
-			set_option(CURLOPT_POSTFIELDSIZE, call.size());
-			set_option(CURLOPT_WRITEDATA, &output);
-			set_option(CURLOPT_HTTPHEADER, HEADER.get());
-
-			const auto result = perform();
-
-			if (result != 200)
-				throw std::runtime_error(std::to_string(result) + " " + __func__);
-
-			return output.str();
-		}
-
-		bool
-		operator()(const string_t& url) const
-		{
-			std::ostringstream ignore;
-
-			set_option(CURLOPT_URL, url.c_str());
-			set_option(CURLOPT_HTTPGET, 1L);
-		#if _WIN32
-			set_option(CURLOPT_HTTPAUTH, CURLAUTH_NEGOTIATE);
-		#else
-			set_option(CURLOPT_HTTPAUTH, CURLAUTH_GSSNEGOTIATE);
-		#endif
-			set_option(CURLOPT_USERNAME, "");
-			set_option(CURLOPT_PASSWORD, "");
-			set_option(CURLOPT_WRITEDATA, &ignore);
-
-			const auto result = perform();
-
-			return result == 200;
-		}
-
-	protected:
-		std::string
-		get_error(const CURLcode code) const
-		{
-			return _error.front() != 0 ? _error.data() : curl_easy_strerror(code);
-		}
-
-		template <typename T>
-		void
-		set_option(const CURLoption key, const T value) const
-		{
-			const CURLcode code = curl_easy_setopt(_handle.get(), key, value);
-			if (code != CURLE_OK)
-				throw std::runtime_error(get_error(code) + " " + __func__);
-		}
-
-		long
-		perform() const
-		{
-			CURLcode code = curl_easy_perform(_handle.get());
-
-			if (code != CURLE_OK)
-				throw std::runtime_error(get_error(code) + " " + __func__);
-
-			long result;
-
-			code = curl_easy_getinfo(_handle.get(), CURLINFO_RESPONSE_CODE, &result);
-			if (code != CURLE_OK)
-				throw std::runtime_error(get_error(code) + " " + __func__);
-
-			return result;
-		}
-
-		static size_t
-		write(char *buffer, size_t size, size_t nitems, void *outstream)
-		{
-			const size_t length = size * nitems;
-			reinterpret_cast<std::ostream*>(outstream)->write(buffer, length);
-			return length;
-		}
-
-	private:
-		std::array<char, CURL_ERROR_SIZE> _error;
-		std::shared_ptr<CURL> _handle;
-
-		static const std::shared_ptr<curl_slist> HEADER;
-};
-
 public:
-	client_impl(const std::string& url)
-	:
-		_url(url),
-		_mutex_cookie(),
-		_mutex_dns(),
-		_mutex_ssl(),
-		_mutex_connect(),
-		_handle(curl_share_init(), curl_share_cleanup)
-	{
-		set_option(CURLSHOPT_SHARE, CURL_LOCK_DATA_COOKIE);
-		set_option(CURLSHOPT_SHARE, CURL_LOCK_DATA_DNS);
-		set_option(CURLSHOPT_SHARE, CURL_LOCK_DATA_SSL_SESSION);
-		set_option(CURLSHOPT_SHARE, CURL_LOCK_DATA_CONNECT);
-		set_option(CURLSHOPT_LOCKFUNC, lock);
-		set_option(CURLSHOPT_UNLOCKFUNC, unlock);
-		set_option(CURLSHOPT_USERDATA, this);
-	}
+    client_impl(const string_t& host, const string_t& port)
+    :
+        _host(host),
+        _service(),
+        _socket(_service),
+		_buffer()
+    {
+        boost::asio::ip::tcp::resolver resolver{_service};
+        boost::asio::ip::tcp::resolver::query query{host, port};
+        boost::asio::connect(_socket, resolver.resolve(query));
+    }
 
-	virtual value_t call(const string_t& service, const string_t& method, const list_t& arguments) override
-	{
-		const string_t url = _url + service;
-		const string_t call = generate(method, arguments);
+    virtual value_t call(const string_t& service, const string_t& method, const list_t& arguments) override
+    {
+        beast::http::request<beast::http::string_body> request;
+        request.method(beast::http::verb::post);
+        request.target(service);
+        request.insert(beast::http::field::host, _host);
+        request.insert(beast::http::field::user_agent, "libhessian/1.0");
+        request.insert(beast::http::field::content_type, "x-application/hessian");
+        request.body = generate(method, arguments);
+        request.prepare();
+        beast::http::write(_socket, request);
 
-		const request perform(_handle);
-		const std::string result = perform(url, call);
+        beast::http::response<beast::http::string_body> response;
+        beast::http::read(_socket, _buffer, response);
 
-		const content_t content = parse(result);
-		return boost::apply_visitor(content_visitor(), content);
-	}
-
-	virtual bool negotiate(const string_t& resource) override
-	{
-		const string_t url = _url + resource;
-		const request perform(_handle);
-		return perform(url);
-	}
-
-protected:
-	std::string
-	get_error(const CURLSHcode code) const
-	{
-		return curl_share_strerror(code);
-	}
-
-	template <typename T>
-	void
-	set_option(const CURLSHoption key, const T value) const
-	{
-		const CURLSHcode code = curl_share_setopt(_handle.get(), key, value);
-		if (code != CURLSHE_OK)
-			throw std::runtime_error(get_error(code) + " " + __func__);
-	}
-
-	static void
-	lock(CURL *handle, curl_lock_data data, curl_lock_access access, void *userptr)
-	{
-		client_impl* client = reinterpret_cast<client_impl*>(userptr);
-		switch (data)
-		{
-		case CURL_LOCK_DATA_COOKIE:
-			access == CURL_LOCK_ACCESS_SHARED
-				? client->_mutex_cookie.lock_shared()
-				: client->_mutex_cookie.lock();
-			break;
-		case CURL_LOCK_DATA_DNS:
-			access == CURL_LOCK_ACCESS_SHARED
-				? client->_mutex_dns.lock_shared()
-				: client->_mutex_dns.lock();
-			break;
-		case CURL_LOCK_DATA_SSL_SESSION:
-			access == CURL_LOCK_ACCESS_SHARED
-				? client->_mutex_ssl.lock_shared()
-				: client->_mutex_ssl.lock();
-			break;
-		case CURL_LOCK_DATA_CONNECT:
-			access == CURL_LOCK_ACCESS_SHARED
-				? client->_mutex_connect.lock_shared()
-				: client->_mutex_connect.lock();
-			break;
-		default:
-			break;
-		}
-	}
-
-	static void
-	unlock(CURL *handle, curl_lock_data data, void *userptr)
-	{
-		client_impl* client = reinterpret_cast<client_impl*>(userptr);
-		switch (data)
-		{
-		case CURL_LOCK_DATA_COOKIE:
-			client->_mutex_cookie.unlock();
-			break;
-		case CURL_LOCK_DATA_DNS:
-			client->_mutex_dns.unlock();
-			break;
-		case CURL_LOCK_DATA_SSL_SESSION:
-			client->_mutex_ssl.unlock();
-			break;
-		case CURL_LOCK_DATA_CONNECT:
-			client->_mutex_connect.unlock();
-			break;
-		default:
-			break;
-		}
-	}
+        const content_t content = parse(response.body);
+        return boost::apply_visitor(content_visitor(), content);
+    }
 
 private:
-	std::string _url;
-	boost::shared_mutex _mutex_cookie;
-	boost::shared_mutex _mutex_dns;
-	boost::shared_mutex _mutex_ssl;
-	boost::shared_mutex _mutex_connect;
-	std::shared_ptr<CURLSH> _handle;
+    string_t _host;
+    boost::asio::io_service _service;
+    boost::asio::ip::tcp::socket _socket;
+    beast::flat_buffer _buffer;
 };
 
-const std::shared_ptr<curl_slist>
-client_impl::request::HEADER(curl_slist_append(nullptr, "Content-Type: x-application/hessian"), curl_slist_free_all);
-
 client_t
-make_client(const std::string& url)
+make_client(const string_t& host, const string_t& port)
 {
-	return std::make_shared<client_impl>(url);
+    return std::make_shared<client_impl>(host, port);
 }
 
 }

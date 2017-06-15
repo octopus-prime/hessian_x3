@@ -12,7 +12,7 @@ int main()
 {
 	try
 	{
-		const caucho::service_t service = caucho::make_service("http://hessian.caucho.com");
+		const caucho::service_t service = caucho::make_service("hessian.caucho.com", "http");
 
 		std::cout << std::boolalpha;
 

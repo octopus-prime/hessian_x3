@@ -118,6 +118,6 @@ public:
 
 typedef std::shared_ptr<service_base> service_t;
 
-service_t make_service(const std::string& host);
+service_t make_service(const std::string& host, const std::string& port);
 
 }
