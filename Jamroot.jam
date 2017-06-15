@@ -13,19 +13,19 @@ project hessian
 lib hessian_serialization
 	:
 		[ glob source/*.cpp : source/client.cpp ]
-		/site-config//boost_date_time
+#		/site-config//boost_date_time
 	;
 
 lib hessian_client
 	:
 		[ glob source/client.cpp ]
 		hessian_serialization
-		/site-config//boost_system
+#		/site-config//boost_system
 	;
 
 exe hessian-example
     :
-        [ glob example/*.cpp : example/bad_chunk.cpp ]
+        [ glob example/*.cpp ]
         hessian_serialization
         hessian_client
         /site-config//boost_log
