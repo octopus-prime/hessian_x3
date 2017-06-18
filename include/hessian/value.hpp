@@ -49,13 +49,6 @@ public:
 	}
 
 	template <typename T>
-	value_t& operator=(T value) noexcept
-	{
-		_variant = std::forward<T>(value);
-		return *this;
-	}
-
-	template <typename T>
 	bool is() const noexcept
 	{
 		return std::holds_alternative<T>(_variant);
