@@ -13,7 +13,7 @@ namespace generator {
 void
 value_visitor::operator()(const date_t& value)
 {
-	const std::chrono::minutes minutes = std::chrono::duration_cast<std::chrono::minutes>(value);
+	const auto minutes = std::chrono::duration_cast<std::chrono::minutes>(value);
 	if (minutes == value)
 	{
 		push_back<std::int8_t>('K');
