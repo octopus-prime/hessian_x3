@@ -147,10 +147,13 @@ set(const T& value)
 
 }
 
-#define GET(r, type, i, member) BOOST_PP_COMMA_IF(i) \
+#define HESSIAN_ADAPT_STRUCT_GET(r, type, i, member) BOOST_PP_COMMA_IF(i) \
 get<decltype(type::member)>(object.at(BOOST_PP_STRINGIZE(member)))
 
-#define DEFINE_GET(STRUCT_NAME, SEQ) \
+#define HESSIAN_ADAPT_STRUCT_SET(r, type, i, member) BOOST_PP_COMMA_IF(i) \
+{BOOST_PP_STRINGIZE(member), set(value.member)}
+
+#define HESSIAN_ADAPT_STRUCT(STRUCT_NAME, SEQ) \
 namespace hessian { \
 template <> \
 STRUCT_NAME \
@@ -159,23 +162,16 @@ get<STRUCT_NAME>(const value_t& value) \
 	const object_t& object = value.as<object_t>(); \
 	return STRUCT_NAME \
 	{ \
-		BOOST_PP_SEQ_FOR_EACH_I(GET, STRUCT_NAME, SEQ) \
+		BOOST_PP_SEQ_FOR_EACH_I(HESSIAN_ADAPT_STRUCT_GET, STRUCT_NAME, SEQ) \
 	}; \
 }\
-}
-
-#define SET(r, type, i, member) BOOST_PP_COMMA_IF(i) \
-{BOOST_PP_STRINGIZE(member), set(value.member)}
-
-#define DEFINE_SET(STRUCT_NAME, SEQ) \
-namespace hessian { \
 template <> \
 value_t \
 set(const STRUCT_NAME& value) \
 { \
 	return object_t \
 	{ \
-		BOOST_PP_SEQ_FOR_EACH_I(SET, _, SEQ) \
+		BOOST_PP_SEQ_FOR_EACH_I(HESSIAN_ADAPT_STRUCT_SET, _, SEQ) \
 	}; \
 }\
 }

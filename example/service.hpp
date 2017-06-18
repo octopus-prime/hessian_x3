@@ -21,15 +21,15 @@ struct Object
 {
 	std::int32_t _value;
 };
-/*
+
 struct Foo
 {
 	std::int32_t id;
 	std::string name;
-	boost::optional<boost::posix_time::ptime> date;
+	std::optional<std::chrono::milliseconds> date;
 	std::vector<std::int32_t> keys;
 };
-*/
+
 class service_base
 {
 protected:
