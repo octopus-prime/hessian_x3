@@ -10,7 +10,7 @@
 namespace hessian {
 namespace generator {
 
-value_visitor::result_type
+void
 value_visitor::operator()(const map_t& value)
 {
 	if (!ref(value))
@@ -18,8 +18,8 @@ value_visitor::operator()(const map_t& value)
 		push_back<std::int8_t>('H');
 		for (const map_t::value_type& element : value)
 		{
-			boost::apply_visitor(*this, element.first);
-			boost::apply_visitor(*this, element.second);
+			element.first.visit(*this);
+			element.second.visit(*this);
 		}
 		push_back<std::int8_t>('Z');
 	}

@@ -10,7 +10,7 @@
 namespace hessian {
 namespace generator {
 
-value_visitor::result_type
+void
 value_visitor::operator()(const binary_t& value)
 {
 	auto iterator = value.begin();

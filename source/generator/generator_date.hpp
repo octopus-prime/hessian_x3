@@ -12,7 +12,7 @@
 namespace hessian {
 namespace generator {
 
-value_visitor::result_type
+void
 value_visitor::operator()(const date_t& value)
 {
 	static const date_t EPOCH(boost::gregorian::date(1970, 1, 1));

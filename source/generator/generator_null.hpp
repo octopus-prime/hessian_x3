@@ -10,7 +10,7 @@
 namespace hessian {
 namespace generator {
 
-value_visitor::result_type
+void
 value_visitor::operator()(const null_t& value)
 {
 	push_back<std::int8_t>('N');

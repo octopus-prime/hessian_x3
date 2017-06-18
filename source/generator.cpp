@@ -43,7 +43,7 @@ generate(const string_t& method, const list_t& arguments)
 	visitor(method);
 	visitor(static_cast<int_t>(arguments.size()));
 	for (const auto& argument : arguments)
-		boost::apply_visitor(visitor, argument);
+		argument.visit(visitor);
 
 	return call;
 }

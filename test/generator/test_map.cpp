@@ -17,11 +17,7 @@ const success_samples_t success_samples
 {
 	{"HZ"s, map_t{}},
 	{"H""\x01""a""\x90""Z"s, map_t{{"a"s, 0}}},
-#ifndef _LIBCPP_VERSION
-	{"H""\x91""\x01""b""\x90""\x01""a""Z"s, map_t{{0, "a"s}, {1, "b"s}}},
-#else
 	{"H""\x90""\x01""a""\x91""\x01""b""Z"s, map_t{{0, "a"s}, {1, "b"s}}},
-#endif
 	{"H""\x79""\x01""a""\x90""Z"s, map_t{{list_t{"a"s}, 0}}},
 };
 

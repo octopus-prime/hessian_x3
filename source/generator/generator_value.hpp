@@ -12,24 +12,24 @@
 namespace hessian {
 namespace generator {
 
-class value_visitor : public boost::static_visitor<>
+class value_visitor
 {
-	typedef list_t ref_t;
-	typedef std::vector<std::vector<string_t>> def_t;
+	using ref_t = list_t;
+	using def_t = std::vector<std::vector<string_t>>;
 
 public:
 	value_visitor(std::string& data);
-	result_type operator()(const null_t& value);
-	result_type operator()(const bool_t& value);
-	result_type operator()(const int_t& value);
-	result_type operator()(const long_t& value);
-	result_type operator()(const double_t& value);
-	result_type operator()(const date_t& value);
-	result_type operator()(const string_t& value);
-	result_type operator()(const binary_t& value);
-	result_type operator()(const list_t& value);
-	result_type operator()(const map_t& value);
-	result_type operator()(const object_t& value);
+	void operator()(const null_t& value);
+	void operator()(const bool_t& value);
+	void operator()(const int_t& value);
+	void operator()(const long_t& value);
+	void operator()(const double_t& value);
+	void operator()(const date_t& value);
+	void operator()(const string_t& value);
+	void operator()(const binary_t& value);
+	void operator()(const list_t& value);
+	void operator()(const map_t& value);
+	void operator()(const object_t& value);
 
 protected:
 	template <typename T>

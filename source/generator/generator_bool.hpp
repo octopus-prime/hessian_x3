@@ -10,7 +10,7 @@
 namespace hessian {
 namespace generator {
 
-value_visitor::result_type
+void
 value_visitor::operator()(const bool_t& value)
 {
 	constexpr char BOOL[] = {'F', 'T'};

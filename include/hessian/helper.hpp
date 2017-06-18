@@ -52,7 +52,7 @@ struct converter<T, typename std::enable_if_t<is_value<T>::value>>
 {
 	static const T& from(const value_t& value)
 	{
-		return boost::get<T>(value);
+		return value.as<T>();
 	}
 
 	static value_t to(const T& value)
@@ -66,7 +66,7 @@ struct converter<T, typename std::enable_if_t<std::is_enum<T>::value>>
 {
 	static T from(const value_t& value)
 	{
-		return static_cast<T>(boost::get<std::int32_t>(value));
+		return static_cast<T>(value.as<std::int32_t>());
 	}
 
 	static value_t to(const T& value)
@@ -80,7 +80,7 @@ struct converter<T, typename std::enable_if_t<is_optional<T>::value>>
 {
 	static T from(const value_t& value)
 	{
-		return boost::apply_visitor(optional_visitor(), value);
+		return value.visit(optional_visitor());
 	}
 
 	static value_t to(const T& value)
@@ -89,7 +89,7 @@ struct converter<T, typename std::enable_if_t<is_optional<T>::value>>
 	}
 
 private:
-	struct optional_visitor : boost::static_visitor<T>
+	struct optional_visitor
 	{
 		template <typename U>
 		T operator()(const U& value) const
@@ -115,7 +115,7 @@ struct converter<T, typename std::enable_if_t<is_list<T>::value>>
 	static T from(const value_t& value)
 	{
 		T list;
-		for (const auto& element : boost::get<list_t>(value))
+		for (const auto& element : value.as<list_t>())
 			list.push_back(get<typename T::value_type>(element));
 		return std::move(list);
 	}
@@ -135,7 +135,7 @@ struct converter<T, typename std::enable_if_t<is_map<T>::value>>
 	static T from(const value_t& value)
 	{
 		T map;
-		for (const auto& element : boost::get<map_t>(value))
+		for (const auto& element : value.as<map_t>())
 			map.emplace(get<typename T::key_type>(element.first), get<typename T::mapped_type>(element.second));
 		return std::move(map);
 	}
@@ -176,7 +176,7 @@ template <> \
 STRUCT_NAME \
 get<STRUCT_NAME>(const value_t& value) \
 { \
-	const object_t& object = boost::get<object_t>(value); \
+	const object_t& object = value.as<object_t>(); \
 	return STRUCT_NAME \
 	{ \
 		BOOST_PP_SEQ_FOR_EACH_I(GET, STRUCT_NAME, SEQ) \

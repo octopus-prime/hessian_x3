@@ -26,7 +26,7 @@ BOOST_DATA_TEST_CASE(test_success, success_samples, sample)
 {
 	content_t content;
 	BOOST_REQUIRE_NO_THROW(content = parse("H\x02\x00""R"s + sample.first));
-	BOOST_CHECK_EQUAL(boost::get<value_t>(content), sample.second);
+	BOOST_CHECK_EQUAL(std::get<value_t>(content), sample.second);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

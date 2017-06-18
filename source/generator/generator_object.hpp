@@ -10,7 +10,7 @@
 namespace hessian {
 namespace generator {
 
-value_visitor::result_type
+void
 value_visitor::operator()(const object_t& value)
 {
 	if (!ref(value))
@@ -26,7 +26,7 @@ value_visitor::operator()(const object_t& value)
 			(*this)(index);
 		}
 		for (const object_t::value_type& element : value)
-			boost::apply_visitor(*this, element.second);
+			element.second.visit(*this);
 	}
 }
 

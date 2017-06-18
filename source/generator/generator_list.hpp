@@ -10,7 +10,7 @@
 namespace hessian {
 namespace generator {
 
-value_visitor::result_type
+void
 value_visitor::operator()(const list_t& value)
 {
 	if (!ref(value))
@@ -19,13 +19,13 @@ value_visitor::operator()(const list_t& value)
 		{
 			push_back<std::int8_t>('\x78' + value.size());
 			for (const list_t::value_type& element : value)
-				boost::apply_visitor(*this, element);
+				element.visit(*this);
 		}
 		else
 		{
 			push_back<std::int8_t>('W');
 			for (const list_t::value_type& element : value)
-				boost::apply_visitor(*this, element);
+				element.visit(*this);
 			push_back<std::int8_t>('Z');
 		}
 	}

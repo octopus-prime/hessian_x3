@@ -10,7 +10,7 @@
 namespace hessian {
 namespace generator {
 
-value_visitor::result_type
+void
 value_visitor::operator()(const long_t& value)
 {
 	if (value >= -8 && value <= 15)

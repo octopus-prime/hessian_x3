@@ -12,9 +12,9 @@
 
 namespace hessian {
 
-typedef value_t reply_t;
-typedef map_t fault_t;
-typedef boost::variant<reply_t, fault_t> content_t;
+using reply_t = value_t;
+using fault_t = map_t;
+using content_t = std::variant<reply_t, fault_t>;
 
 class parse_exception : public virtual exception {};
 

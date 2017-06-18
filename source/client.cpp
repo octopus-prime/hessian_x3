@@ -22,7 +22,7 @@ public:
     fault_exception_impl(const fault_t& fault)
     :
         _fault(fault),
-        _what(boost::get<string_t>(_fault.at("message"s)))
+        _what(_fault.at("message"s).as<string_t>())
     {
     }
 
@@ -41,14 +41,14 @@ private:
     string_t _what;
 };
 
-struct content_visitor : boost::static_visitor<const value_t&>
+struct content_visitor
 {
-    result_type operator()(const reply_t& content) const
+	const value_t& operator()(const reply_t& content) const
     {
         return content;
     }
 
-    result_type operator()(const fault_t& content) const
+	const value_t& operator()(const fault_t& content) const
     {
         throw fault_exception_impl(content);
     }
@@ -86,7 +86,7 @@ public:
         beast::http::read(_socket, _buffer, response);
 
         const content_t content = parse(response.body);
-        return boost::apply_visitor(content_visitor(), content);
+        return std::visit(content_visitor(), content);
     }
 
 private:

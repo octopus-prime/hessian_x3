@@ -13,22 +13,20 @@
 namespace hessian {
 
 class output_visitor
-:
-	public boost::static_visitor<>
 {
 public:
 	output_visitor(std::ostream& stream);
-	result_type operator()(const null_t& value);
-	result_type operator()(const bool_t& value);
-	result_type operator()(const int_t& value);
-	result_type operator()(const long_t& value);
-	result_type operator()(const double_t& value);
-	result_type operator()(const date_t& value);
-	result_type operator()(const string_t& value);
-	result_type operator()(const binary_t& value);
-	result_type operator()(const list_t& value);
-	result_type operator()(const map_t& value);
-	result_type operator()(const object_t& value);
+	void operator()(const null_t& value);
+	void operator()(const bool_t& value);
+	void operator()(const int_t& value);
+	void operator()(const long_t& value);
+	void operator()(const double_t& value);
+	void operator()(const date_t& value);
+	void operator()(const string_t& value);
+	void operator()(const binary_t& value);
+	void operator()(const list_t& value);
+	void operator()(const map_t& value);
+	void operator()(const object_t& value);
 
 private:
 	std::ostream& _stream;
@@ -36,54 +34,53 @@ private:
 
 output_visitor::output_visitor(std::ostream& stream)
 :
-	boost::static_visitor<>(),
 	_stream(stream)
 {
 }
 
-output_visitor::result_type
+void
 output_visitor::operator()(const null_t& value)
 {
 	_stream << "null";
 }
 
-output_visitor::result_type
+void
 output_visitor::operator()(const bool_t& value)
 {
 	_stream << "bool(" << std::boolalpha << value << std::noboolalpha << ')';
 }
 
-output_visitor::result_type
+void
 output_visitor::operator()(const int_t& value)
 {
 	_stream << "int(" << value << ')';
 }
 
-output_visitor::result_type
+void
 output_visitor::operator()(const long_t& value)
 {
 	_stream << "long(" << value << ')';
 }
 
-output_visitor::result_type
+void
 output_visitor::operator()(const double_t& value)
 {
 	_stream << "double(" << value << ')';
 }
 
-output_visitor::result_type
+void
 output_visitor::operator()(const date_t& value)
 {
 	_stream << "date(" << boost::posix_time::to_iso_extended_string(value) << ')';
 }
 
-output_visitor::result_type
+void
 output_visitor::operator()(const string_t& value)
 {
 	_stream << "string('" << value << "')";
 }
 
-output_visitor::result_type
+void
 output_visitor::operator()(const binary_t& value)
 {
 	_stream << "binary('";
@@ -91,7 +88,7 @@ output_visitor::operator()(const binary_t& value)
 	_stream << "')";
 }
 
-output_visitor::result_type
+void
 output_visitor::operator()(const list_t& value)
 {
 	_stream << "list(";
@@ -99,12 +96,12 @@ output_visitor::operator()(const list_t& value)
 	{
 		if (element != value.begin())
 			_stream << ", ";
-		boost::apply_visitor(*this, *element);
+		element->visit(*this);
 	}
 	_stream << ')';
 }
 
-output_visitor::result_type
+void
 output_visitor::operator()(const map_t& value)
 {
 	_stream << "map(";
@@ -112,14 +109,14 @@ output_visitor::operator()(const map_t& value)
 	{
 		if (element != value.begin())
 			_stream << ", ";
-		boost::apply_visitor(*this, element->first);
+		element->first.visit(*this);
 		_stream << " = ";
-		boost::apply_visitor(*this, element->second);
+		element->second.visit(*this);
 	}
 	_stream << ')';
 }
 
-output_visitor::result_type
+void
 output_visitor::operator()(const object_t& value)
 {
 	_stream << "object(";
@@ -129,7 +126,7 @@ output_visitor::operator()(const object_t& value)
 			_stream << ", ";
 		(*this)(element->first);
 		_stream << " = ";
-		boost::apply_visitor(*this, element->second);
+		element->second.visit(*this);
 	}
 	_stream << ')';
 }
