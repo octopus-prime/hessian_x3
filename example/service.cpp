@@ -10,8 +10,8 @@
 #include <hessian/helper.hpp>
 #include <boost/log/trivial.hpp>
 
-HESSIAN_ADAPT_STRUCT(caucho::Object, (_value));
-HESSIAN_ADAPT_STRUCT(caucho::Foo, (id)(name)(date)(keys));
+HESSIAN_ADAPT_STRUCT(caucho::Object, _value);
+HESSIAN_ADAPT_STRUCT(caucho::Foo, id, name, date, keys);
 
 namespace caucho {
 

@@ -12,6 +12,7 @@
 #include <boost/preprocessor/stringize.hpp>
 #include <boost/preprocessor/punctuation/comma_if.hpp>
 #include <boost/preprocessor/seq/for_each_i.hpp>
+#include <boost/preprocessor/variadic/to_seq.hpp>
 
 namespace hessian {
 
@@ -153,7 +154,7 @@ get<decltype(type::member)>(object.at(BOOST_PP_STRINGIZE(member)))
 #define HESSIAN_ADAPT_STRUCT_SET(r, type, i, member) BOOST_PP_COMMA_IF(i) \
 {BOOST_PP_STRINGIZE(member), set(value.member)}
 
-#define HESSIAN_ADAPT_STRUCT(STRUCT_NAME, SEQ) \
+#define HESSIAN_ADAPT_STRUCT_SEQ(STRUCT_NAME, SEQ) \
 namespace hessian { \
 template <> \
 STRUCT_NAME \
@@ -175,3 +176,6 @@ set(const STRUCT_NAME& value) \
 	}; \
 }\
 }
+
+#define HESSIAN_ADAPT_STRUCT(...) \
+HESSIAN_ADAPT_STRUCT_SEQ(BOOST_PP_SEQ_HEAD(BOOST_PP_VARIADIC_TO_SEQ(__VA_ARGS__)), BOOST_PP_SEQ_TAIL(BOOST_PP_VARIADIC_TO_SEQ(__VA_ARGS__)))
