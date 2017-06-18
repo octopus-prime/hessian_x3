@@ -71,10 +71,10 @@ output_visitor::operator()(const double_t& value)
 void
 output_visitor::operator()(const date_t& value)
 {
-	using boost::posix_time::ptime;
-	static const ptime EPOCH{boost::gregorian::date(1970, 1, 1)};
-	const ptime duration = EPOCH + boost::posix_time::milliseconds(value.count());
-	_stream << "date(" << boost::posix_time::to_iso_extended_string(duration) << ')';
+	using namespace boost::posix_time;
+	static const ptime EPOCH {boost::gregorian::date(1970, 1, 1)};
+	const ptime duration = EPOCH + milliseconds(value.count());
+	_stream << "date(" << to_iso_extended_string(duration) << ')';
 }
 
 void

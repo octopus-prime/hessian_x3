@@ -26,9 +26,8 @@ operator"" _b(const char* s, const size_t l)
 inline date_t
 operator"" _d(const char* s, const size_t l)
 {
-	using boost::posix_time::from_iso_string;
-	using boost::posix_time::ptime;
-	static const ptime EPOCH{boost::gregorian::date(1970, 1, 1)};
+	using namespace boost::posix_time;
+	static const ptime EPOCH {boost::gregorian::date(1970, 1, 1)};
     return date_t((from_iso_string(string_t(s, l)) - EPOCH).total_milliseconds());
 }
 

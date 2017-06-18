@@ -7,17 +7,12 @@
 
 #pragma once
 
-//#include <boost/date_time/posix_time/posix_time_types.hpp>
-
 namespace hessian {
 namespace generator {
 
 void
 value_visitor::operator()(const date_t& value)
 {
-//	static const date_t EPOCH(boost::gregorian::date(1970, 1, 1));
-//	const boost::posix_time::time_duration duration = value - EPOCH;
-
 	const std::chrono::minutes minutes = std::chrono::duration_cast<std::chrono::minutes>(value);
 	if (minutes == value)
 	{

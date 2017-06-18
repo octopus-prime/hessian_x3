@@ -7,13 +7,9 @@
 
 #pragma once
 
-//#include <boost/date_time/posix_time/posix_time_types.hpp>
-
 namespace hessian {
 namespace parser {
 namespace date {
-
-//static const date_t EPOCH(boost::gregorian::date(1970, 1, 1));
 
 template <typename Duration>
 struct date_action
@@ -21,7 +17,7 @@ struct date_action
 	template <typename C>
 	void operator()(C& ctx) const
 	{
-		x3::_val(ctx) = /*EPOCH +*/ Duration(x3::_attr(ctx));
+		x3::_val(ctx) = Duration(x3::_attr(ctx));
 	};
 };
 
