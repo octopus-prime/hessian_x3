@@ -8,6 +8,7 @@
 #include <hessian/client.hpp>
 #include <hessian/parser.hpp>
 #include <hessian/generator.hpp>
+#include <beast/version.hpp>
 #include <beast/core.hpp>
 #include <beast/http.hpp>
 #include <boost/asio.hpp>
@@ -70,7 +71,7 @@ public:
 
         _header.method(beast::http::verb::post);
         _header.insert(beast::http::field::host, host);
-        _header.insert(beast::http::field::user_agent, "libhessian/1.0");
+        _header.insert(beast::http::field::user_agent, "libhessian/1.0 (" BEAST_VERSION_STRING ")");
         _header.insert(beast::http::field::content_type, "x-application/hessian");
     }
 
