@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include <boost/date_time/posix_time/ptime.hpp>
+#include <chrono>
 #include <cstdint>
 #include <string>
 #include <vector>
@@ -23,7 +23,7 @@ using bool_t = bool;
 using int_t = std::int32_t;
 using long_t = std::int64_t;
 using double_t = double;
-using date_t = boost::posix_time::ptime;
+using date_t = std::chrono::milliseconds;
 using string_t = std::string;
 using binary_t = std::basic_string<std::uint8_t>;
 using list_t = std::vector<value_t>;
@@ -49,7 +49,7 @@ public:
 	}
 
 	template <typename T>
-	value_t(T& value) noexcept
+	value_t(T& value) noexcept // FIXME: WTF?!
 	:
 		_variant{value}
 	{

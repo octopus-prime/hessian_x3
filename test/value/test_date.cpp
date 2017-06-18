@@ -21,14 +21,14 @@ typedef mpl::remove<all_types, this_type>::type other_types;
 
 const std::initializer_list<value_t> values =
 {
-	this_type(),
+//	this_type(),
 	this_type("19700101T000000"_d),
 	this_type("20161213T123456"_d)
 };
 
 const std::initializer_list<string_t> strings =
 {
-	"date(not-a-date-time)",
+//	"date(1970-01-01T00:00:00)",
 	"date(1970-01-01T00:00:00)",
 	"date(2016-12-13T12:34:56)"
 };

@@ -24,7 +24,9 @@ inline date_t
 operator"" _d(const char* s, const size_t l)
 {
 	using boost::posix_time::from_iso_string;
-    return from_iso_string(string_t(s, l));
+	using boost::posix_time::ptime;
+	static const ptime EPOCH{boost::gregorian::date(1970, 1, 1)};
+    return date_t((from_iso_string(string_t(s, l)) - EPOCH).total_milliseconds());
 }
 
 inline int_t

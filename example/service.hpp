@@ -12,6 +12,7 @@
 #include <boost/functional/hash.hpp>
 #include <cstdint>
 #include <string>
+#include <chrono>
 #include <unordered_map>
 #include <memory>
 
@@ -34,7 +35,7 @@ struct Object
 {
 	std::int32_t _value;
 };
-
+/*
 struct Foo
 {
 	std::int32_t id;
@@ -42,7 +43,7 @@ struct Foo
 	boost::optional<boost::posix_time::ptime> date;
 	std::vector<std::int32_t> keys;
 };
-
+*/
 class service_base
 {
 protected:
@@ -61,9 +62,9 @@ public:
 	virtual double replyDouble_0() = 0;
 	virtual double replyDouble_1() = 0;
 
-	virtual boost::posix_time::ptime replyDate_0() = 0;
-	virtual boost::posix_time::ptime replyDate_1() = 0;
-	virtual boost::posix_time::ptime replyDate_2() = 0;
+	virtual std::chrono::milliseconds replyDate_0() = 0;
+	virtual std::chrono::milliseconds replyDate_1() = 0;
+	virtual std::chrono::milliseconds replyDate_2() = 0;
 
 	virtual std::string replyString_0() = 0;
 	virtual std::string replyString_1() = 0;
@@ -93,9 +94,9 @@ public:
 	virtual bool argDouble_0(const double arg) = 0;
 	virtual bool argDouble_1(const double arg) = 0;
 
-	virtual bool argDate_0(const boost::posix_time::ptime& arg) = 0;
-	virtual bool argDate_1(const boost::posix_time::ptime& arg) = 0;
-	virtual bool argDate_2(const boost::posix_time::ptime& arg) = 0;
+	virtual bool argDate_0(const std::chrono::milliseconds& arg) = 0;
+	virtual bool argDate_1(const std::chrono::milliseconds& arg) = 0;
+	virtual bool argDate_2(const std::chrono::milliseconds& arg) = 0;
 
 	virtual bool argString_0(const std::string& arg) = 0;
 	virtual bool argString_1(const std::string& arg) = 0;

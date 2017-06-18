@@ -7,6 +7,8 @@
 
 #pragma once
 
+#include <cmath>
+
 namespace hessian {
 namespace generator {
 

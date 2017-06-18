@@ -13,8 +13,8 @@
 DEFINE_GET(caucho::Object, (_value));
 DEFINE_SET(caucho::Object, (_value));
 
-DEFINE_GET(caucho::Foo, (id)(name)(date)(keys));
-DEFINE_SET(caucho::Foo, (id)(name)(date)(keys));
+//DEFINE_GET(caucho::Foo, (id)(name)(date)(keys));
+//DEFINE_SET(caucho::Foo, (id)(name)(date)(keys));
 
 namespace caucho {
 
@@ -67,19 +67,19 @@ public:
 		return hessian::get<double>(call("replyDouble_1_0", {}));
 	}
 
-	virtual boost::posix_time::ptime replyDate_0() override
+	virtual std::chrono::milliseconds replyDate_0() override
 	{
-		return hessian::get<boost::posix_time::ptime>(call("replyDate_0", {}));
+		return hessian::get<std::chrono::milliseconds>(call("replyDate_0", {}));
 	}
 
-	virtual boost::posix_time::ptime replyDate_1() override
+	virtual std::chrono::milliseconds replyDate_1() override
 	{
-		return hessian::get<boost::posix_time::ptime>(call("replyDate_1", {}));
+		return hessian::get<std::chrono::milliseconds>(call("replyDate_1", {}));
 	}
 
-	virtual boost::posix_time::ptime replyDate_2() override
+	virtual std::chrono::milliseconds replyDate_2() override
 	{
-		return hessian::get<boost::posix_time::ptime>(call("replyDate_2", {}));
+		return hessian::get<std::chrono::milliseconds>(call("replyDate_2", {}));
 	}
 
 	virtual std::string replyString_0() override
@@ -178,17 +178,17 @@ public:
 		return hessian::get<bool>(call("argDouble_1_0", {hessian::set(arg)}));
 	}
 
-	virtual bool argDate_0(const boost::posix_time::ptime& arg) override
+	virtual bool argDate_0(const std::chrono::milliseconds& arg) override
 	{
 		return hessian::get<bool>(call("argDate_0", {hessian::set(arg)}));
 	}
 
-	virtual bool argDate_1(const boost::posix_time::ptime& arg) override
+	virtual bool argDate_1(const std::chrono::milliseconds& arg) override
 	{
 		return hessian::get<bool>(call("argDate_1", {hessian::set(arg)}));
 	}
 
-	virtual bool argDate_2(const boost::posix_time::ptime& arg) override
+	virtual bool argDate_2(const std::chrono::milliseconds& arg) override
 	{
 		return hessian::get<bool>(call("argDate_2", {hessian::set(arg)}));
 	}
