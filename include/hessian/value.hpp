@@ -42,32 +42,18 @@ public:
 	}
 
 	template <typename T>
-	value_t(T const& value) noexcept
+	value_t(T value) noexcept
 	:
-		_variant{value}
+		_variant{std::forward<T>(value)}
 	{
 	}
 
 	template <typename T>
-	value_t(T& value) noexcept // FIXME: WTF?!
-	:
-		_variant{value}
+	value_t& operator=(T value) noexcept
 	{
+		_variant = std::forward<T>(value);
+		return *this;
 	}
-
-	template <typename T>
-	value_t(T&& value) noexcept
-	:
-		_variant{std::move(value)}
-	{
-	}
-
-	value_t(value_t const& value) = default;
-	value_t(value_t& value) = default; // FIXME: WTF?!
-	value_t(value_t&& value) = default;
-
-	value_t& operator=(value_t const& value) = default;
-	value_t& operator=(value_t&& value) = default;
 
 	template <typename T>
 	bool is() const noexcept
