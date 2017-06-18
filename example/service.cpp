@@ -102,9 +102,9 @@ public:
 		return hessian::get<std::string>(call("replyString_1023", {}));
 	}
 
-	virtual boost::optional<std::string> replyString_null() override
+	virtual std::optional<std::string> replyString_null() override
 	{
-		return hessian::get<boost::optional<std::string>>(call("replyString_null", {}));
+		return hessian::get<std::optional<std::string>>(call("replyString_null", {}));
 	}
 
 	virtual std::basic_string<std::uint8_t> replyBinary_0() override
@@ -122,15 +122,14 @@ public:
 		return hessian::get<std::vector<std::string>>(call("replyUntypedFixedList_7", {}));
 	}
 
-	virtual std::unordered_map<std::int32_t, std::string> replyMap_2() override
+	virtual std::map<std::int32_t, std::string> replyMap_2() override
 	{
-		return hessian::get<std::unordered_map<std::int32_t, std::string>>(call("replyUntypedMap_2", {}));
+		return hessian::get<std::map<std::int32_t, std::string>>(call("replyUntypedMap_2", {}));
 	}
 
-	virtual std::unordered_map<std::vector<std::string>, std::int32_t> replyMap_3() override
+	virtual std::map<std::vector<std::string>, std::int32_t> replyMap_3() override
 	{
-		return hessian::get<std::unordered_map<std::vector<std::string>, std::int32_t>>(call("replyUntypedMap_3", {}));
-//		return hessian::get<std::result_of_t<decltype(&service_base::replyMap_3)(decltype(this))>>(call("replyUntypedMap_3", {}));
+		return hessian::get<std::map<std::vector<std::string>, std::int32_t>>(call("replyUntypedMap_3", {}));
 	}
 
 	virtual std::vector<Object> replyObject_2() override
@@ -213,7 +212,7 @@ public:
 		return hessian::get<bool>(call("argString_1023", {hessian::set(arg)}));
 	}
 
-	virtual bool argString_null(const boost::optional<std::string>& arg) override
+	virtual bool argString_null(const std::optional<std::string>& arg) override
 	{
 		return hessian::get<bool>(call("argNull", {hessian::set(arg)}));
 	}
@@ -233,12 +232,12 @@ public:
 		return hessian::get<bool>(call("argUntypedFixedList_7", {hessian::set(arg)}));
 	}
 
-	virtual bool argMap_2(const std::unordered_map<std::int32_t, std::string>& arg) override
+	virtual bool argMap_2(const std::map<std::int32_t, std::string>& arg) override
 	{
 		return hessian::get<bool>(call("argUntypedMap_2", {hessian::set(arg)}));
 	}
 
-	virtual bool argMap_3(const std::unordered_map<std::vector<std::string>, std::int32_t>& arg) override
+	virtual bool argMap_3(const std::map<std::vector<std::string>, std::int32_t>& arg) override
 	{
 		return hessian::get<bool>(call("argUntypedMap_3", {hessian::set(arg)}));
 	}

@@ -86,6 +86,11 @@ public:
 		return std::visit(std::move(visitor), _variant);
 	}
 
+	operator bool() const noexcept
+	{
+		return !is<null_t>();
+	}
+
 	bool operator==(value_t const& value) const
 	{
 		return _variant == value._variant;

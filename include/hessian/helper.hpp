@@ -8,7 +8,7 @@
 #pragma once
 
 #include <hessian/value.hpp>
-#include <boost/optional.hpp>
+#include <optional>
 #include <boost/preprocessor/stringize.hpp>
 #include <boost/preprocessor/punctuation/comma_if.hpp>
 #include <boost/preprocessor/seq/for_each_i.hpp>
@@ -36,13 +36,13 @@ template <> struct is_value<string_t> : std::true_type { };
 template <> struct is_value<binary_t> : std::true_type { };
 
 template <typename T> struct is_optional : std::false_type { };
-template <typename... Ts> struct is_optional<boost::optional<Ts...> > : std::true_type { };
+template <typename... Ts> struct is_optional<std::optional<Ts...> > : std::true_type { };
 
 template <typename T> struct is_list : std::false_type { };
 template <typename... Ts> struct is_list<std::vector<Ts...> > : std::true_type { };
 
 template <typename T> struct is_map : std::false_type { };
-template <typename... Ts> struct is_map<std::unordered_map<Ts...> > : std::true_type { };
+template <typename... Ts> struct is_map<std::map<Ts...> > : std::true_type { };
 
 template <typename T, typename Enable = void>
 struct converter {};
@@ -66,12 +66,12 @@ struct converter<T, typename std::enable_if_t<std::is_enum<T>::value>>
 {
 	static T from(const value_t& value)
 	{
-		return static_cast<T>(value.as<std::int32_t>());
+		return static_cast<T>(value.as<int_t>());
 	}
 
 	static value_t to(const T& value)
 	{
-		return static_cast<std::int32_t>(value);
+		return static_cast<int_t>(value);
 	}
 };
 
@@ -80,33 +80,13 @@ struct converter<T, typename std::enable_if_t<is_optional<T>::value>>
 {
 	static T from(const value_t& value)
 	{
-		return value.visit(optional_visitor());
+		return !value ? T {} : T {get<typename T::value_type>(value)};
 	}
 
 	static value_t to(const T& value)
 	{
-		return value ? value_t(value.get()) : value_t(null_t());
+		return !value ? value_t {} : value_t {*value};
 	}
-
-private:
-	struct optional_visitor
-	{
-		template <typename U>
-		T operator()(const U& value) const
-		{
-			throw std::bad_cast();
-		}
-
-		T operator()(const null_t& value) const
-		{
-			return T();
-		}
-
-		T operator()(const T& value) const
-		{
-			return T(value);
-		}
-	};
 };
 
 template <typename T>

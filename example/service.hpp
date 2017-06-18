@@ -7,27 +7,13 @@
 
 #pragma once
 
-#include <boost/date_time/posix_time/ptime.hpp>
-#include <boost/optional.hpp>
-#include <boost/functional/hash.hpp>
 #include <cstdint>
 #include <string>
 #include <chrono>
-#include <unordered_map>
+#include <vector>
+#include <map>
+#include <optional>
 #include <memory>
-
-namespace std {
-
-template <>
-struct hash<std::vector<std::string>>
-{
-	size_t operator()(const std::vector<std::string>& list) const
-	{
-		return boost::hash_value(list);
-	}
-};
-
-}
 
 namespace caucho {
 
@@ -70,15 +56,15 @@ public:
 	virtual std::string replyString_1() = 0;
 	virtual std::string replyString_31() = 0;
 	virtual std::string replyString_1023() = 0;
-	virtual boost::optional<std::string> replyString_null() = 0;
+	virtual std::optional<std::string> replyString_null() = 0;
 
 	virtual std::basic_string<std::uint8_t> replyBinary_0() = 0;
 	virtual std::basic_string<std::uint8_t> replyBinary_1() = 0;
 
 	virtual std::vector<std::string> replyList_7() = 0;
 
-	virtual std::unordered_map<std::int32_t, std::string> replyMap_2() = 0;
-	virtual std::unordered_map<std::vector<std::string>, std::int32_t> replyMap_3() = 0;
+	virtual std::map<std::int32_t, std::string> replyMap_2() = 0;
+	virtual std::map<std::vector<std::string>, std::int32_t> replyMap_3() = 0;
 
 	virtual std::vector<Object> replyObject_2() = 0;
 
@@ -102,15 +88,15 @@ public:
 	virtual bool argString_1(const std::string& arg) = 0;
 	virtual bool argString_31(const std::string& arg) = 0;
 	virtual bool argString_1023(const std::string& arg) = 0;
-	virtual bool argString_null(const boost::optional<std::string>& arg) = 0;
+	virtual bool argString_null(const std::optional<std::string>& arg) = 0;
 
 	virtual bool argBinary_0(const std::basic_string<std::uint8_t>& arg) = 0;
 	virtual bool argBinary_1(const std::basic_string<std::uint8_t>& arg) = 0;
 
 	virtual bool argList_7(const std::vector<std::string>& arg) = 0;
 
-	virtual bool argMap_2(const std::unordered_map<std::int32_t, std::string>& arg) = 0;
-	virtual bool argMap_3(const std::unordered_map<std::vector<std::string>, std::int32_t>& arg) = 0;
+	virtual bool argMap_2(const std::map<std::int32_t, std::string>& arg) = 0;
+	virtual bool argMap_3(const std::map<std::vector<std::string>, std::int32_t>& arg) = 0;
 
 	virtual bool argObject_2(const std::vector<Object>& arg) = 0;
 
