@@ -7,8 +7,8 @@
 
 #pragma once
 
-#include <boost/date_time/posix_time/time_formatters.hpp>
 #include <boost/algorithm/hex.hpp>
+#include <iomanip>
 
 namespace hessian {
 
@@ -71,10 +71,10 @@ output_visitor::operator()(const double_t& value)
 void
 output_visitor::operator()(const date_t& value)
 {
-	using namespace boost::posix_time;
-	static const ptime EPOCH {boost::gregorian::date(1970, 1, 1)};
-	const ptime duration = EPOCH + milliseconds(value.count());
-	_stream << "date(" << to_iso_extended_string(duration) << ')';
+	using clock = std::chrono::system_clock;
+	constexpr clock::time_point epoch;
+	const std::time_t time = clock::to_time_t(epoch + value);
+	_stream << "date(" << std::put_time(std::gmtime(&time), "%FT%T") << ')';
 }
 
 void
