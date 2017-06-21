@@ -70,9 +70,9 @@ public:
         boost::asio::connect(_socket, resolver.resolve(query));
 
         _header.method(beast::http::verb::post);
-        _header.insert(beast::http::field::host, host);
-        _header.insert(beast::http::field::user_agent, "libhessian/1.0 (" BEAST_VERSION_STRING ")");
-        _header.insert(beast::http::field::content_type, "x-application/hessian");
+        _header.set(beast::http::field::host, host);
+        _header.set(beast::http::field::user_agent, "libhessian/1.0 (" BEAST_VERSION_STRING ")");
+        _header.set(beast::http::field::content_type, "x-application/hessian");
     }
 
     virtual value_t call(const string_t& service, const string_t& method, const list_t& arguments) override
@@ -80,7 +80,7 @@ public:
         beast::http::request<beast::http::string_body> request(_header);
         request.target(service);
         request.body = generate(method, arguments);
-        request.prepare();
+        request.prepare_payload();
         beast::http::write(_socket, request);
 
         beast::http::response<beast::http::string_body> response;
