@@ -62,12 +62,11 @@ public:
     :
         _service(),
         _socket(_service),
-		_buffer(),
-		_header()
+		_header(),
+		_buffer()
     {
         boost::asio::ip::tcp::resolver resolver{_service};
-        boost::asio::ip::tcp::resolver::query query{host, port};
-        boost::asio::connect(_socket, resolver.resolve(query));
+        boost::asio::connect(_socket, resolver.resolve({host, port}));
 
         _header.method(beast::http::verb::post);
         _header.set(beast::http::field::host, host);
@@ -93,8 +92,8 @@ public:
 private:
     boost::asio::io_service _service;
     boost::asio::ip::tcp::socket _socket;
+    beast::http::header<true> _header;
     beast::flat_buffer _buffer;
-    beast::http::request<beast::http::string_body>::header _header;
 };
 
 client_t
