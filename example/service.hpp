@@ -22,6 +22,10 @@ struct Object
 	std::int32_t _value;
 };
 
+struct Empty
+{
+};
+
 struct Foo
 {
 	std::int32_t id;
@@ -36,69 +40,26 @@ protected:
 	virtual ~service_base() noexcept = default;
 
 public:
-	virtual bool replyTrue() = 0;
-	virtual bool replyFalse() = 0;
-
-	virtual std::int32_t replyInt_0() = 0;
-	virtual std::int32_t replyInt_1() = 0;
-
-	virtual std::int64_t replyLong_0() = 0;
-	virtual std::int64_t replyLong_1() = 0;
-
-	virtual double replyDouble_0() = 0;
-	virtual double replyDouble_1() = 0;
-
-	virtual std::chrono::milliseconds replyDate_0() = 0;
-	virtual std::chrono::milliseconds replyDate_1() = 0;
-	virtual std::chrono::milliseconds replyDate_2() = 0;
-
-	virtual std::string replyString_0() = 0;
-	virtual std::string replyString_1() = 0;
-	virtual std::string replyString_31() = 0;
-	virtual std::string replyString_1023() = 0;
 	virtual std::optional<std::string> replyString_null() = 0;
 
-	virtual std::basic_string<std::uint8_t> replyBinary_0() = 0;
-	virtual std::basic_string<std::uint8_t> replyBinary_1() = 0;
-
-	virtual std::vector<std::string> replyList_7() = 0;
-
-	virtual std::map<std::int32_t, std::string> replyMap_2() = 0;
-	virtual std::map<std::vector<std::string>, std::int32_t> replyMap_3() = 0;
-
 	virtual std::vector<Object> replyObject_2() = 0;
-
-	virtual bool argTrue(const bool arg) = 0;
-	virtual bool argFalse(const bool arg) = 0;
-
-	virtual bool argInt_0(const std::int32_t arg) = 0;
-	virtual bool argInt_1(const std::int32_t arg) = 0;
-
-	virtual bool argLong_0(const std::int64_t arg) = 0;
-	virtual bool argLong_1(const std::int64_t arg) = 0;
-
-	virtual bool argDouble_0(const double arg) = 0;
-	virtual bool argDouble_1(const double arg) = 0;
-
-	virtual bool argDate_0(const std::chrono::milliseconds& arg) = 0;
-	virtual bool argDate_1(const std::chrono::milliseconds& arg) = 0;
-	virtual bool argDate_2(const std::chrono::milliseconds& arg) = 0;
-
-	virtual bool argString_0(const std::string& arg) = 0;
-	virtual bool argString_1(const std::string& arg) = 0;
-	virtual bool argString_31(const std::string& arg) = 0;
-	virtual bool argString_1023(const std::string& arg) = 0;
-	virtual bool argString_null(const std::optional<std::string>& arg) = 0;
-
-	virtual bool argBinary_0(const std::basic_string<std::uint8_t>& arg) = 0;
-	virtual bool argBinary_1(const std::basic_string<std::uint8_t>& arg) = 0;
-
-	virtual bool argList_7(const std::vector<std::string>& arg) = 0;
-
-	virtual bool argMap_2(const std::map<std::int32_t, std::string>& arg) = 0;
-	virtual bool argMap_3(const std::map<std::vector<std::string>, std::int32_t>& arg) = 0;
+	virtual std::vector<Empty> replyObject_16() = 0;
 
 	virtual bool argObject_2(const std::vector<Object>& arg) = 0;
+	virtual bool argObject_16(const std::vector<Empty>& arg) = 0;
+
+	virtual bool test_bool(const std::string& suffix) const = 0;
+	virtual bool test_int(const std::string& suffix) const = 0;
+	virtual bool test_long(const std::string& suffix) const = 0;
+	virtual bool test_double(const std::string& suffix) const = 0;
+	virtual bool test_date(const std::string& suffix) const = 0;
+	virtual bool test_string(const std::string& suffix) const = 0;
+	virtual bool test_binary(const std::string& suffix) const = 0;
+	virtual bool test_list(const std::string& suffix) const = 0;
+	virtual bool test_map_0() const = 0;
+	virtual bool test_map_1() const = 0;
+	virtual bool test_map_2() const = 0;
+	virtual bool test_map_3() const = 0;
 
 	virtual void fault() = 0;
 };

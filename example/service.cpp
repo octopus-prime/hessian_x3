@@ -11,6 +11,7 @@
 #include <boost/log/trivial.hpp>
 
 HESSIAN_ADAPT_STRUCT(caucho::Object, _value);
+HESSIAN_ADAPT_STRUCT(caucho::Empty);
 HESSIAN_ADAPT_STRUCT(caucho::Foo, id, name, date, keys);
 
 namespace caucho {
@@ -24,224 +25,106 @@ public:
 	{
 	}
 
-	virtual bool replyTrue() override
-	{
-		return hessian::get<bool>(call("replyTrue", {}));
-	}
-
-	virtual bool replyFalse() override
-	{
-		return hessian::get<bool>(call("replyFalse", {}));
-	}
-
-	virtual std::int32_t replyInt_0() override
-	{
-		return hessian::get<std::int32_t>(call("replyInt_0", {}));
-	}
-
-	virtual std::int32_t replyInt_1() override
-	{
-		return hessian::get<std::int32_t>(call("replyInt_1", {}));
-	}
-
-	virtual std::int64_t replyLong_0() override
-	{
-		return hessian::get<std::int64_t>(call("replyLong_0", {}));
-	}
-
-	virtual std::int64_t replyLong_1() override
-	{
-		return hessian::get<std::int64_t>(call("replyLong_1", {}));
-	}
-
-	virtual double replyDouble_0() override
-	{
-		return hessian::get<double>(call("replyDouble_0_0", {}));
-	}
-
-	virtual double replyDouble_1() override
-	{
-		return hessian::get<double>(call("replyDouble_1_0", {}));
-	}
-
-	virtual std::chrono::milliseconds replyDate_0() override
-	{
-		return hessian::get<std::chrono::milliseconds>(call("replyDate_0", {}));
-	}
-
-	virtual std::chrono::milliseconds replyDate_1() override
-	{
-		return hessian::get<std::chrono::milliseconds>(call("replyDate_1", {}));
-	}
-
-	virtual std::chrono::milliseconds replyDate_2() override
-	{
-		return hessian::get<std::chrono::milliseconds>(call("replyDate_2", {}));
-	}
-
-	virtual std::string replyString_0() override
-	{
-		return hessian::get<std::string>(call("replyString_0", {}));
-	}
-
-	virtual std::string replyString_1() override
-	{
-		return hessian::get<std::string>(call("replyString_1", {}));
-	}
-
-	virtual std::string replyString_31() override
-	{
-		return hessian::get<std::string>(call("replyString_31", {}));
-	}
-
-	virtual std::string replyString_1023() override
-	{
-		return hessian::get<std::string>(call("replyString_1023", {}));
-	}
-
 	virtual std::optional<std::string> replyString_null() override
 	{
 		return hessian::get<std::optional<std::string>>(call("replyString_null", {}));
 	}
 
-	virtual std::basic_string<std::uint8_t> replyBinary_0() override
-	{
-		return hessian::get<std::basic_string<std::uint8_t>>(call("replyBinary_0", {}));
-	}
-
-	virtual std::basic_string<std::uint8_t> replyBinary_1() override
-	{
-		return hessian::get<std::basic_string<std::uint8_t>>(call("replyBinary_1", {}));
-	}
-
-	virtual std::vector<std::string> replyList_7() override
-	{
-		return hessian::get<std::vector<std::string>>(call("replyUntypedFixedList_7", {}));
-	}
-
-	virtual std::map<std::int32_t, std::string> replyMap_2() override
-	{
-		return hessian::get<std::map<std::int32_t, std::string>>(call("replyUntypedMap_2", {}));
-	}
-
-	virtual std::map<std::vector<std::string>, std::int32_t> replyMap_3() override
-	{
-		return hessian::get<std::map<std::vector<std::string>, std::int32_t>>(call("replyUntypedMap_3", {}));
-	}
-
-	virtual std::vector<Object> replyObject_2() override
-	{
-		return hessian::get<std::vector<Object>>(call("replyObject_2a", {}));
-	}
-
-	virtual bool argTrue(const bool arg) override
-	{
-		return hessian::get<bool>(call("argTrue", {hessian::set(arg)}));
-	}
-
-	virtual bool argFalse(const bool arg) override
-	{
-		return hessian::get<bool>(call("argFalse", {hessian::set(arg)}));
-	}
-
-	virtual bool argInt_0(const std::int32_t arg) override
-	{
-		return hessian::get<bool>(call("argInt_0", {hessian::set(arg)}));
-	}
-
-	virtual bool argInt_1(const std::int32_t arg) override
-	{
-		return hessian::get<bool>(call("argInt_1", {hessian::set(arg)}));
-	}
-
-	virtual bool argLong_0(const std::int64_t arg) override
-	{
-		return hessian::get<bool>(call("argLong_0", {hessian::set(arg)}));
-	}
-
-	virtual bool argLong_1(const std::int64_t arg) override
-	{
-		return hessian::get<bool>(call("argLong_1", {hessian::set(arg)}));
-	}
-
-	virtual bool argDouble_0(const double arg) override
-	{
-		return hessian::get<bool>(call("argDouble_0_0", {hessian::set(arg)}));
-	}
-
-	virtual bool argDouble_1(const double arg) override
-	{
-		return hessian::get<bool>(call("argDouble_1_0", {hessian::set(arg)}));
-	}
-
-	virtual bool argDate_0(const std::chrono::milliseconds& arg) override
-	{
-		return hessian::get<bool>(call("argDate_0", {hessian::set(arg)}));
-	}
-
-	virtual bool argDate_1(const std::chrono::milliseconds& arg) override
-	{
-		return hessian::get<bool>(call("argDate_1", {hessian::set(arg)}));
-	}
-
-	virtual bool argDate_2(const std::chrono::milliseconds& arg) override
-	{
-		return hessian::get<bool>(call("argDate_2", {hessian::set(arg)}));
-	}
-
-	virtual bool argString_0(const std::string& arg) override
-	{
-		return hessian::get<bool>(call("argString_0", {hessian::set(arg)}));
-	}
-
-	virtual bool argString_1(const std::string& arg) override
-	{
-		return hessian::get<bool>(call("argString_1", {hessian::set(arg)}));
-	}
-
-	virtual bool argString_31(const std::string& arg) override
-	{
-		return hessian::get<bool>(call("argString_31", {hessian::set(arg)}));
-	}
-
-	virtual bool argString_1023(const std::string& arg) override
-	{
-		return hessian::get<bool>(call("argString_1023", {hessian::set(arg)}));
-	}
-
-	virtual bool argString_null(const std::optional<std::string>& arg) override
+	virtual bool argString_null(const std::optional<std::string>& arg) //override
 	{
 		return hessian::get<bool>(call("argNull", {hessian::set(arg)}));
 	}
 
-	virtual bool argBinary_0(const std::basic_string<std::uint8_t>& arg) override
+	virtual std::vector<Object> replyObject_2() override
 	{
-		return hessian::get<bool>(call("argBinary_0", {hessian::set(arg)}));
+		return hessian::get<std::vector<Object>>(call("replyObject_2", {}));
 	}
 
-	virtual bool argBinary_1(const std::basic_string<std::uint8_t>& arg) override
+	virtual std::vector<Empty> replyObject_16() override
 	{
-		return hessian::get<bool>(call("argBinary_1", {hessian::set(arg)}));
-	}
-
-	virtual bool argList_7(const std::vector<std::string>& arg) override
-	{
-		return hessian::get<bool>(call("argUntypedFixedList_7", {hessian::set(arg)}));
-	}
-
-	virtual bool argMap_2(const std::map<std::int32_t, std::string>& arg) override
-	{
-		return hessian::get<bool>(call("argUntypedMap_2", {hessian::set(arg)}));
-	}
-
-	virtual bool argMap_3(const std::map<std::vector<std::string>, std::int32_t>& arg) override
-	{
-		return hessian::get<bool>(call("argUntypedMap_3", {hessian::set(arg)}));
+		return hessian::get<std::vector<Empty>>(call("replyObject_16", {}));
 	}
 
 	virtual bool argObject_2(const std::vector<Object>& arg) override
 	{
-		return hessian::get<bool>(call("argObject_2a", {hessian::set(arg)}));
+		return hessian::get<bool>(call("argObject_2", {hessian::set(arg)}));
+	}
+
+	virtual bool argObject_16(const std::vector<Empty>& arg) override
+	{
+		return hessian::get<bool>(call("argObject_16", {hessian::set(arg)}));
+	}
+
+	virtual bool test_bool(const std::string& suffix) const override
+	{
+		const auto value = hessian::get<bool>(call("reply" + suffix, {}));
+		return hessian::get<bool>(call("arg" + suffix, {hessian::set(value)}));
+	}
+
+	virtual bool test_int(const std::string& suffix) const override
+	{
+		const auto value = hessian::get<std::int32_t>(call("replyInt_" + suffix, {}));
+		return hessian::get<bool>(call("argInt_" + suffix, {hessian::set(value)}));
+	}
+
+	virtual bool test_long(const std::string& suffix) const override
+	{
+		const auto value = hessian::get<std::int64_t>(call("replyLong_" + suffix, {}));
+		return hessian::get<bool>(call("argLong_" + suffix, {hessian::set(value)}));
+	}
+
+	virtual bool test_double(const std::string& suffix) const override
+	{
+		const auto value = hessian::get<double>(call("replyDouble_" + suffix, {}));
+		return hessian::get<bool>(call("argDouble_" + suffix, {hessian::set(value)}));
+	}
+
+	virtual bool test_date(const std::string& suffix) const override
+	{
+		const auto value = hessian::get<std::chrono::milliseconds>(call("replyDate_" + suffix, {}));
+		return hessian::get<bool>(call("argDate_" + suffix, {hessian::set(value)}));
+	}
+
+	virtual bool test_string(const std::string& suffix) const override
+	{
+		const auto value = hessian::get<std::string>(call("replyString_" + suffix, {}));
+		return hessian::get<bool>(call("argString_" + suffix, {hessian::set(value)}));
+	}
+
+	virtual bool test_binary(const std::string& suffix) const override
+	{
+		const auto value = hessian::get<std::basic_string<std::uint8_t>>(call("replyBinary_" + suffix, {}));
+		return hessian::get<bool>(call("argBinary_" + suffix, {hessian::set(value)}));
+	}
+
+	virtual bool test_list(const std::string& suffix) const override
+	{
+		const auto value = hessian::get<std::vector<std::string>>(call("replyUntypedFixedList_" + suffix, {}));
+		return hessian::get<bool>(call("argUntypedFixedList_" + suffix, {hessian::set(value)}));
+	}
+
+	virtual bool test_map_0() const override
+	{
+		const auto value = hessian::get<std::map<std::int32_t, std::int32_t>>(call("replyUntypedMap_0", {}));
+		return hessian::get<bool>(call("argUntypedMap_0", {hessian::set(value)}));
+	}
+
+	virtual bool test_map_1() const override
+	{
+		const auto value = hessian::get<std::map<std::string, std::int32_t>>(call("replyUntypedMap_1", {}));
+		return hessian::get<bool>(call("argUntypedMap_1", {hessian::set(value)}));
+	}
+
+	virtual bool test_map_2() const override
+	{
+		const auto value = hessian::get<std::map<std::int32_t, std::string>>(call("replyUntypedMap_2", {}));
+		return hessian::get<bool>(call("argUntypedMap_2", {hessian::set(value)}));
+	}
+
+	virtual bool test_map_3() const override
+	{
+		const auto value = hessian::get<std::map<std::vector<std::string>, std::int32_t>>(call("replyUntypedMap_3", {}));
+		return hessian::get<bool>(call("argUntypedMap_3", {hessian::set(value)}));
 	}
 
 	virtual void fault() override
@@ -250,11 +133,11 @@ public:
 	}
 
 protected:
-	hessian::value_t call(const hessian::string_t& method, const hessian::list_t& arguments)
+	hessian::value_t call(const hessian::string_t& method, const hessian::list_t& arguments) const
 	{
 		BOOST_LOG_TRIVIAL(info) << "Call " << method;
 		const hessian::value_t value = _client->call("/test/test2", method, arguments);
-		BOOST_LOG_TRIVIAL(info) << "Got " << value;
+		BOOST_LOG_TRIVIAL(debug) << "Got " << value;
 		return value;
 	}
 
